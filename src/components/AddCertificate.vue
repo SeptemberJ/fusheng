@@ -88,7 +88,7 @@ export default {
     },
     sureSubmit () {
       this.toggleLoadingBt(true)
-      axios.post('http://plant.fs-elliott.cn:8082/fushengJK/insertphoto?imagename=' + this.Form.certificateName + '&effectivedate=' + dateToFormat(this.Form.certificateValidity) + '&gysid=' + this.userId, this.formDataImage, {
+      axios.post(encodeURI('http://plant.fs-elliott.cn:8082/fushengJK/insertphoto?imagename=' + this.Form.certificateName + '&effectivedate=' + dateToFormat(this.Form.certificateValidity) + '&gysid=' + this.userId), this.formDataImage, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -125,3 +125,6 @@ body{
 .el-notification.right{
   right: 0px !important;
 }
+.el-notification__content p{
+  width: 250px !important;
+}

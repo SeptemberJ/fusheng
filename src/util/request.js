@@ -135,14 +135,18 @@ function formatReq (type, url, data) {
 
 const Http = {
   get: (url, query) => {
-    url = url + utils.formatUrl(query)
+    if (query) {
+      url = encodeURI(url + utils.formatUrl(query) + '&timestamp=' + Date.now())
+    } else {
+      url = encodeURI(url + '?timestamp=' + Date.now())
+    }
     setToken()
     return axios.get(`${baseUrl}${url}`, { cancelToken: source.token }).then(r => r)
   },
-  post: (url, data) => formatReq('post', url, data),
-  put: (url, data) => formatReq('put', url, data),
-  patch: (url, data) => formatReq('patch', url, data),
-  delete: (url, data) => formatReq('delete', url, data)
+  post: (url, data) => formatReq('post', encodeURI(url), data),
+  put: (url, data) => formatReq('put', encodeURI(url), data),
+  patch: (url, data) => formatReq('patch', encodeURI(url), data),
+  delete: (url, data) => formatReq('delete', encodeURI(url), data)
 }
 
 export default Http

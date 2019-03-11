@@ -141,7 +141,6 @@ export default {
           case 1:
             this.CertificateList = res.data.photolist
             this.sum = res.data.count
-            // this.checkOverDate(res.data.photolist)
             break
           default:
             this.$message({
@@ -153,17 +152,17 @@ export default {
         console.log(error)
       })
     },
-    checkOverDate (List) {
-      let overDateStr = ''
-      let curTime = (new Date()).getTime()
-      List.map(item => {
-        let limitTime = (new Date(item.effective_date)).getTime()
-        if ((limitTime - curTime) < 7 * 24 * 60 * 60 * 1000) { // 一周前
-          overDateStr = overDateStr + item.imagename + '、'
-        }
-      })
-      this.showNotice(overDateStr)
-    },
+    // checkOverDate (List) {
+    //   let overDateStr = ''
+    //   let curTime = (new Date()).getTime()
+    //   List.map(item => {
+    //     let limitTime = (new Date(item.effective_date)).getTime()
+    //     if ((limitTime - curTime) < 7 * 24 * 60 * 60 * 1000) { // 一周前
+    //       overDateStr = overDateStr + item.imagename + '、'
+    //     }
+    //   })
+    //   this.showNotice(overDateStr)
+    // },
     handleCurrentChange () {
       this.getCertificateList()
     }

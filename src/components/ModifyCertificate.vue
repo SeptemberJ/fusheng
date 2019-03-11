@@ -125,6 +125,32 @@ export default {
         console.log(error)
       })
     },
+    sureSubmit2 () {
+      this.toggleLoadingBt(true)
+      this.Http.post('http://plant.fs-elliott.cn:8082/fushengJK/updatephoto', {photoid: this.detailInfo.id, effectivedate: dateToFormat(this.Form.certificateValidity), image: this.formDataImage ? this.formDataImage : this.detailInfo.image, gysid: this.userId}
+      ).then((res) => {
+        switch (res.data.result) {
+          case '2':
+            this.$message({
+              message: '修改成功!',
+              type: 'success'
+            })
+            this.$emit('toggleModifyDialog', false)
+            this.$emit('refresh')
+            this.toggleLoadingBt(false)
+            break
+          default:
+            this.$message({
+              message: res.data.message + '!',
+              type: 'error'
+            })
+            this.toggleLoadingBt(false)
+        }
+      }).catch((error) => {
+        this.toggleLoadingBt(false)
+        console.log(error)
+      })
+    },
     beforeUpload (file) {
       console.log(file)
       if (file.size > 1024000 * 2) {

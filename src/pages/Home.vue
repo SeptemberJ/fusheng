@@ -80,7 +80,10 @@ export default {
     getOverDateCertificates () {
       this.Http.get('serzhengjian', {gysid: this.userId}
       ).then(res => {
-        this.checkOverDate(res.data.arr[0].zjlist)
+        let result = res.data.arr[0].zjlist
+        if (result.length > 0) {
+          this.checkOverDate(result)
+        }
       }).catch((error) => {
         console.log(error)
       })
