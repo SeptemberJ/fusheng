@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import {clearCookie} from '../util/utils'
 export default {
   name: 'TopBar',
   props: ['isCollapse', 'isMobile'],
@@ -33,9 +34,14 @@ export default {
     })
   },
   methods: {
+    ...mapActions([
+      'hideNotice'
+    ]),
     LogOut () {
       localStorage.clear('vuex-along')
       this.$router.push({name: 'Login'})
+      clearCookie('Fs_14a808c40bba58c2c')
+      this.hideNotice()
     },
     showAside () {
       this.$emit('toggleAside', false)

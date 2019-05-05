@@ -7,7 +7,7 @@ body{
   min-width: 320px;
   margin: 0; 
   padding: 0;
-  border: 0;
+  border: 0;  
 }
 /*color*/
 .ColorWhite{
@@ -22,6 +22,9 @@ body{
 }
 .TextAlignR{
   text-align: right;
+}
+.TextAlignC{
+  text-align: center;
 }
 /*margin*/
 .MarginT_20{

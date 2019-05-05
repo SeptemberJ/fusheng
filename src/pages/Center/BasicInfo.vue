@@ -3,6 +3,19 @@
     <el-form label-position="top" label-width="95px" :model="basicInfo">
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12">
+          <el-form-item label="当前账号" prop="fname">
+            <el-input v-model="basicInfo.fname" placeholder="请输入用户名" disabled></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" class="TextAlignL">
+          <el-form-item label="密码" prop="">
+            <el-button type="primary" icon="el-icon-edit" @click="showModify">修改密码</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="12">
           <el-form-item label="联系人" prop="fpeople">
             <el-input v-model="basicInfo.fpeople" placeholder="请输入联系人" disabled></el-input>
           </el-form-item>
@@ -61,6 +74,26 @@
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      title="修改密码"
+      :close-on-click-modal="false"
+      :visible.sync="ifModifyPsd"
+      width="450px"
+      center>
+      <div>
+        <el-form :model="formModify" :rules="rulesModify" ref="formModify" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="新密码" prop="psd">
+            <el-input type="password" v-model="formModify.psd" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="确认新密码" prop="psdAgain">
+            <el-input type="password" v-model="formModify.psdAgain" clearable></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="modifyPsd('formModify')">确认修改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -70,6 +103,19 @@ export default {
   name: 'BasicInfo',
   data () {
     return {
+      ifModifyPsd: false,
+      formModify: {
+        psd: '',
+        psdAgain: ''
+      },
+      rulesModify: {
+        psd: [
+          { required: true, message: '请输入新密码', trigger: 'blur' }
+        ],
+        psdAgain: [
+          { required: true, message: '请再次输入新密码', trigger: 'blur' }
+        ]
+      },
       basicInfo: {}
     }
   },
@@ -86,6 +132,73 @@ export default {
       this.Http.get('sergys', {code: this.userCode}
       ).then(res => {
         this.basicInfo = res.data.arr
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    showModify () {
+      this.ifModifyPsd = true
+    },
+    checkPsd (PSD) {
+      var regu = "^[0-9a-zA-Z]{6,12}$"
+      var re = new RegExp(regu)
+      if (PSD.length < 6) {
+        return false
+      }
+      if (re.test(PSD)) { 
+        return true
+      }else{ 
+        return false
+      }
+    },
+    modifyPsd (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (!this.checkPsd(this.formModify.psd)) {
+            this.$message({
+              message: '密码长度不能少于6位,并且必须包含数字和字母!',
+              type: 'warning'
+            })
+            return false
+          }
+          if (this.formModify.psd === this.formModify.psdAgain) {
+            this.sureModify()
+          } else {
+            this.$message({
+              message: '两次输入的密码不一致!',
+              type: 'warning'
+            })
+          }
+        } else{
+          this.$message({
+            message: '请将信息填写完整!',
+            type: 'warning'
+          })
+          return false
+        }
+      })
+    },
+    sureModify () {
+      this.Http.post('updatepassword', {code: this.userCode, password: this.formModify.psd}
+      ).then(res => {
+        switch (res.data.result) {
+          case '1':
+            this.$message({
+              message: '密码修改成功!',
+              type: 'success'
+            })
+            // 退出登陆
+            localStorage.clear('vuex-along')
+            this.$router.push({name: 'Login'})
+            clearCookie('Fs_14a808c40bba58c2c')
+            this.hideNotice()
+            break
+          default:
+            this.$message({
+              message: res.data.message + '!',
+              type: 'error'
+            })
+        }
       }).catch((error) => {
         console.log(error)
       })

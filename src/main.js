@@ -7,12 +7,15 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/style.css'
 import '../static/icon/iconfont.css'
-
 import Http from './util/request'
+// import Print from 'vue-print-nb'
+import '../static/js/xlsx.full.min.js'
+
 Vue.prototype.Http = Http
 
 Vue.use(Vuex)
 Vue.use(ElementUI)
+// Vue.use(Print)
 
 Vue.config.productionTip = false
 

@@ -9,6 +9,16 @@
         <el-form-item label="" prop="accountPsd">
           <el-input v-model="Form.accountPsd" type="password" placeholder="密码" clearable></el-input>
         </el-form-item>
+        <el-form-item label="" prop="code">
+          <el-row>
+            <el-col :span="12">
+              <el-input v-model="Form.code" placeholder="验证码" clearable style="width: 200px"></el-input>
+            </el-col>
+            <el-col :span="12">
+              <div class="codeBlock" @click="createCode">{{realCode}}</div>
+            </el-col>
+          </el-row>
+        </el-form-item>
         <el-button type="primary" :loading="btLoading" class="bt" @click="Login('Form')">登陆</el-button>
       </el-form>
     </div>
@@ -17,6 +27,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import {setCookie} from '../util/utils'
+import CryptoJS from 'crypto-js'
 export default {
   name: 'Login',
   data () {
@@ -35,9 +46,11 @@ export default {
       }
     }
     return {
+      realCode: '', // 随机验证码
       Form: {
         accountName: 'fushen11', // fushen11
-        accountPsd: '111111' // 111111
+        accountPsd: 'fs111111', // fs111111
+        code: ''
       },
       rules: {
         accountName: [
@@ -45,6 +58,9 @@ export default {
         ],
         accountPsd: [
           { validator: validatePsd, trigger: 'change' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       }
 
@@ -55,6 +71,9 @@ export default {
       btLoading: state => state.btLoading
     })
   },
+  created () {
+    this.createCode()
+  },
   methods: {
     ...mapActions([
       'unitUserInfo',
@@ -63,10 +82,18 @@ export default {
     Login (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.sureLogin()
+          if (this.Form.code.toUpperCase() === this.realCode.toUpperCase()) {
+            this.sureLogin()
+          } else {
+            this.$message({
+              message: '输入的验证码不正确!',
+              type: 'warning'
+            })
+            return false
+          }
         } else {
           this.$message({
-            message: '请输入用户名或密码!',
+            message: '请将信息填写完整!',
             type: 'warning'
           })
           return false
@@ -80,9 +107,9 @@ export default {
       ).then(res => {
         switch (res.data.result) {
           case 1:
-            setCookie('btwccy_cookie', res.data.token, 6)
+            let cookieStr = CryptoJS.HmacSHA256((this.Form.accountName + this.Form.accountPsd).toString(), '14a808c40bba58c2c')
+            setCookie('Fs_14a808c40bba58c2c', cookieStr, 6)
             let Info = res.data.loginlist[0]
-            console.log(Info)
             this.unitUserInfo({code: Info.code, name: Info.fname, id: Info.id})
             // this.unitCode(Info.code)
             // this.unitUserName(Info.fname)
@@ -113,6 +140,16 @@ export default {
         this.toggleLoadingBt(false)
         console.log(error)
       })
+    },
+    createCode () {
+      let code = ''
+      let codeLength = 5
+      let random = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+      for (var i = 0; i < codeLength; i++) {
+        var index = Math.floor(Math.random() * 62)
+        code += random[index]
+      }
+      this.realCode = code
     }
   }
 }
@@ -136,6 +173,20 @@ export default {
       width: 100%;
       font-weight: 400;
       letter-spacing: .34em;
+    }
+    .codeBlock{
+      width: 100px;
+      height: 35px !important;
+      line-height: 35px;
+      float: right;
+      border: 1px solid #eee;
+      font-family:Arial,宋体;
+      font-style:italic;
+      color:#fff;
+      padding:2px 3px;
+      letter-spacing:3px;
+      font-weight:bolder;
+      cursor: pointer;
     }
   }
 }

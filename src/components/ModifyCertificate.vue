@@ -73,7 +73,7 @@ export default {
   },
   watch: {
     dialogFormVisible: function (newVal, oldVal) {
-      this.$emit('toggleAddDialog', newVal)
+      this.$emit('toggleModifyDialog', newVal)
     }
     // ,
     // detailInfo: function (newVal, oldVal) {

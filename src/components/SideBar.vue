@@ -25,6 +25,7 @@
         </template>
         <el-menu-item index="2-1">基本信息</el-menu-item>
         <el-menu-item index="2-2">证件资料</el-menu-item>
+        <!-- <el-menu-item index="2-3">日常安排</el-menu-item> -->
       </el-submenu>
       <!-- <el-menu-item index="3">
         <i class="el-icon-menu"></i>

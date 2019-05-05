@@ -93,5 +93,9 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+  externals: {
+    './cptable': 'var cptable',
+    '../xlsx.js': 'var _XLSX'
   }
 }

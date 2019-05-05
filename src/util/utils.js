@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js'
 
 export function Encrypt (plaintText) {
-  var keyStr = 'btwccy_liubai'
+  var keyStr = 'fs_liubai'
   var key = CryptoJS.enc.Utf8.parse(keyStr)
   // var iv = CryptoJS.enc.Utf8.parse('qwertyuiopasdfgh')
   var encryptedData = CryptoJS.AES.encrypt(plaintText, key, {
@@ -16,7 +16,7 @@ export function Encrypt (plaintText) {
 
 // AES解密
 export function Decrypt (encryptedStr) {
-  var keyStr = 'btwccy_liubai'
+  var keyStr = 'fs_liubai'
   var key = CryptoJS.enc.Utf8.parse(keyStr)
   var encryptedHexStr = CryptoJS.enc.Hex.parse(encryptedStr)
   var encryptedBase64Str = CryptoJS.enc.Base64.stringify(encryptedHexStr)

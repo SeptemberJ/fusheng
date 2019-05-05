@@ -16,6 +16,7 @@
           <!-- 个人页 -->
           <BasicInfo v-if="menuIdx == '2-1'"/>
           <Certificates v-if="menuIdx == '2-2'" @refreshOverDate="getOverDateCertificates"/>
+          <Calendar v-if="menuIdx == '2-3'"/>
         </el-main>
         <el-footer>Copyright  2019 上海旺策尔信息科技有限公司 版权所有</el-footer>
       </el-container>
@@ -31,6 +32,7 @@ import Breadcrumb from '../components/Breadcrumb.vue'
 import OrderList from './Order/OrderList.vue'
 import BasicInfo from './Center/BasicInfo.vue'
 import Certificates from './Center/Certificates.vue'
+import Calendar from './Center/Calendar.vue'
 export default {
   name: 'Home',
   data () {
@@ -68,7 +70,8 @@ export default {
     Breadcrumb,
     OrderList,
     BasicInfo,
-    Certificates
+    Certificates,
+    Calendar
   },
   methods: {
     ...mapActions([
