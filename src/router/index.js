@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../vuex/store'
 import Login from '@/pages/Login'
-// import SetPsd from '@/pages/SetPsd'
+import SetPsd from '@/pages/SetPsd'
 import Information from '@/pages/Information'
 import Home from '@/pages/Home'
 import {getCookie} from '@/util/utils'
@@ -17,12 +17,12 @@ const router = new VueRouter({
       name: 'Login',
       component: Login
     },
-    // {
-    //   path: '/SetPsd',
-    //   name: 'SetPsd',
-    //   component: SetPsd,
-    //   meta: {requireAuth: true}
-    // },
+    {
+      path: '/SetPsd',
+      name: 'SetPsd',
+      component: SetPsd,
+      meta: {requireAuth: true}
+    },
     {
       path: '/Information',
       name: 'Information',

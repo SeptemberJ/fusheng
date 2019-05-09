@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
     <div class="SetPsd">
-      <div class="MarginB_20"><h2 class="ColorWhite" style="letter-spacing: .34em;">修改密码{{userCode}}</h2></div>
+      <div class="MarginB_20"><h2 class="ColorWhite" style="letter-spacing: .34em;">修改密码</h2></div>
       <el-form :model="Form" :rules="rules" ref="Form" label-width="0px" class="demo-ruleForm">
         <el-form-item label="" prop="accountPsd">
           <el-input v-model="Form.accountPsd" type="password" placeholder="请输入密码" clearable></el-input>
@@ -61,10 +61,35 @@ export default {
     ...mapActions([
       'toggleLoadingBt'
     ]),
+    checkPsd (PSD) {
+      var regu = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/
+      if (PSD.length < 6) {
+        return false
+      }
+      if (regu.test(PSD)) {
+        return true
+      } else {
+        return false
+      }
+    },
     ModifyPsd (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.sureModify()
+          if (!this.checkPsd(this.Form.accountPsd)) {
+            this.$message({
+              message: '密码长度不能少于6位,并且必须包含数字和字母!',
+              type: 'warning'
+            })
+            return false
+          }
+          if (this.Form.accountPsd === this.Form.accountPsdAgain) {
+            this.sureModify()
+          } else {
+            this.$message({
+              message: '两次输入的密码不一致!',
+              type: 'warning'
+            })
+          }
         } else {
           this.$message({
             message: '请确认您输入的信息!',

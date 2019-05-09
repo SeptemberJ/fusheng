@@ -7,34 +7,99 @@
       </el-col>
       <el-col :span="24">
         <el-form :model="Form" :rules="rules" ref="Form" label-position="left" label-width="95px" class="demo-ruleForm">
+          <el-form-item label="基本信息">
+          </el-form-item>
           <el-form-item label="联系人" prop="contacts">
-            <el-input v-model="Form.contacts" placeholder="请输入联系人" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.contacts" placeholder="请输入联系人" clearable></el-input>
           </el-form-item>
           <el-form-item label="手机号" prop="phone">
-            <el-input v-model="Form.phone" placeholder="请输入手机号" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.phone" placeholder="请输入手机号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="固定电话" prop="fixedPhone">
+            <el-input v-model="Form.fixedPhone" placeholder="固定电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="传真" prop="fax">
-            <el-input v-model="Form.fax" placeholder="请输入传真" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.fax" placeholder="请输入传真" clearable></el-input>
+          </el-form-item>
+           <el-form-item label="地址" prop="address">
+            <el-input v-model="Form.address" placeholder="请输入地址" clearable></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="mail">
-            <el-input v-model="Form.mail" placeholder="请输入邮箱" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.mail" placeholder="请输入邮箱" clearable></el-input>
           </el-form-item>
-          <el-form-item label="地址" prop="address">
-            <el-input v-model="Form.address" placeholder="请输入地址" clearable :disabled="!ifCanModify"></el-input>
+          <el-form-item label="备用邮箱1" prop="mail1">
+            <el-input v-model="Form.mail1" placeholder="请输入邮箱" clearable></el-input>
           </el-form-item>
+          <el-form-item label="备用邮箱2" prop="mail2">
+            <el-input v-model="Form.mail2" placeholder="请输入邮箱" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="公司资料">
+          </el-form-item>
+          <el-form-item label="营业执照" prop="address" class="TextAlignR">
+            <el-input v-model="Form.licenseFileName" placeholder="请输入文件名称" clearable style="width: 200px;"></el-input>
+            <el-date-picker style="width: 150px;"
+              v-model="Form.licenseClosingDate"
+              type="date"
+              placeholder="选择有效期">
+            </el-date-picker>
+            <el-upload
+              class="upload-demo"
+              :on-success="uploadSuccessLicense"
+              :on-remove="removeLicense"
+              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile">
+              <el-button size="small">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="公司简介">
+            <el-input v-model="Form.companyFileName" placeholder="请输入文件名称" clearable></el-input>
+            <el-upload
+              class="upload-demo TextAlignR"
+              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile"
+              :on-success="uploadSuccessCompany"
+              :on-remove="removeCompany"
+              :limit="1">
+              <el-button size="small">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="质量证书" class="TextAlignR">
+            <el-input v-model="Form.certificateFileName" placeholder="请输入文件名称" clearable style="width: 200px;"></el-input>
+            <el-date-picker style="width: 150px;"
+              v-model="Form.certificateClosingDate"
+              type="date"
+              placeholder="选择有效期">
+            </el-date-picker>
+            <el-upload
+              class="upload-demo"
+              :limit="1"
+              :on-success="uploadSuccessCertificate"
+              :on-remove="removeCertificate"
+              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile">
+              <el-button size="small">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="设备清单">
+            <el-input v-model="Form.equipmentFileName" placeholder="请输入文件名称" clearable></el-input>
+            <el-upload
+              class="upload-demo TextAlignR"
+              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile"
+              :on-success="uploadSuccessEquipment"
+              :on-remove="removeEquipment"
+              :limit="1">
+              <el-button size="small">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+
           <el-form-item label="开户银行" prop="bank">
-            <el-input v-model="Form.bank" placeholder="请输入开户银行" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.bank" placeholder="请输入开户银行" clearable></el-input>
           </el-form-item>
           <el-form-item label="银行账号" prop="bankAccount">
-            <el-input v-model="Form.bankAccount" placeholder="请输入银行账号" clearable :disabled="!ifCanModify"></el-input>
-          </el-form-item>
-          <el-form-item label="税号" prop="dutyParagraph">
-            <el-input v-model="Form.dutyParagraph" placeholder="请输入税号" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.bankAccount" placeholder="请输入银行账号" clearable></el-input>
           </el-form-item>
           <el-form-item label="信用机构号" prop="creditInstitutionNumber">
-            <el-input v-model="Form.creditInstitutionNumber" placeholder="请输入信用机构号" clearable :disabled="!ifCanModify"></el-input>
+            <el-input v-model="Form.creditInstitutionNumber" placeholder="请输入信用机构号" clearable></el-input>
           </el-form-item>
-          <el-button type="primary" :loading="btLoading" :disabled="!ifCanModify" class="bt" @click="Submit('Form')">提交</el-button>
+          <el-button type="primary" :loading="btLoading" class="bt" @click="Submit('Form')">提交</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -61,9 +126,26 @@ export default {
       Form: {
         contacts: '',
         phone: '',
+        fixedPhone: '',
         fax: '',
-        mail: '',
+        email: '',
+        email1: '',
+        email2: '',
         address: '',
+        // 营业执照
+        licenseFileName: '',
+        licenseClosingDate: '',
+        licenseFileUrl: '',
+        // 公司简介
+        companyFileName: '',
+        companyFileUrl: '',
+        // 质量证书
+        certificateFileName: '',
+        certificateClosingDate: '',
+        certificateFileUrl: '',
+        // 设备清单
+        equipmentFileName: '',
+        equipmentFileUrl: '',
         bank: '',
         bankAccount: '',
         dutyParagraph: '',
@@ -91,25 +173,21 @@ export default {
         ],
         bankAccount: [
           { required: true, message: '请输入银行账号', trigger: 'blur' }
-        ],
-        dutyParagraph: [
-          { required: true, message: '请输入税号', trigger: 'blur' }
-        ],
-        creditInstitutionNumber: [
-          { required: true, message: '请输入信用机构号', trigger: 'blur' }
         ]
-      }
+      },
+      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     }
   },
   computed: {
     ...mapState({
       userCode: state => state.userCode,
+      userId: state => state.userId,
       userName: state => state.userName,
       btLoading: state => state.btLoading
     })
   },
   created () {
-    this.getInformaion()
+    // this.getInformaion()
   },
   components: {
     TopBar
@@ -118,9 +196,65 @@ export default {
     ...mapActions([
       'toggleLoadingBt'
     ]),
+    uploadSuccessLicense (response, file, fileList, pp) {
+      this.Form.licenseFileUrl = response.filePath
+    },
+    uploadSuccessCompany (response, file, fileList, pp) {
+      this.Form.companyFileUrl = response.filePath
+    },
+    uploadSuccessCertificate (response, file, fileList, pp) {
+      this.Form.certificateFileUrl = response.filePath
+    },
+    uploadSuccessEquipment (response, file, fileList, pp) {
+      this.Form.equipmentFileUrl = response.filePath
+    },
+    removeLicense () {
+      this.Form.licenseFileUrl = ''
+    },
+    removeCompany () {
+      this.Form.companyFileUrl = ''
+    },
+    removeCertificate () {
+      this.Form.certificateFileUrl = ''
+    },
+    removeEquipment () {
+      this.Form.equipmentFileUrl = ''
+    },
     Submit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.Form)
+          // 要上传就必须名称 文件具备
+          if (!this.Form.licenseFileName || !this.Form.licenseClosingDate || !this.Form.licenseFileUrl) {
+            this.$message({
+              message: '请将营业执照的信息填写完整!',
+              type: 'warning'
+            })
+            return false
+          }
+          if ((!this.Form.companyFileName && this.Form.companyFileUrl) || (this.Form.companyFileName && !this.Form.companyFileUrl)) {
+            this.$message({
+              message: '若要上传公司简介，请将信息补充完整!',
+              type: 'warning'
+            })
+            return false
+          }
+          if ((!this.Form.certificateFileName && !this.Form.certificateClosingDate && !this.Form.certificateFileUrl) || (this.Form.certificateFileName && this.Form.certificateClosingDate && this.Form.certificateFileUrl)) {
+            // ok
+          } else {
+            this.$message({
+              message: '若要上传质量证书，请将信息补充完整!',
+              type: 'warning'
+            })
+            return false
+          }
+          if ((!this.Form.equipmentFileName && this.Form.equipmentFileUrl) || (this.Form.equipmentFileName && !this.Form.equipmentFileUrl)) {
+            this.$message({
+              message: '若要上传设备列表，请将信息补充完整!',
+              type: 'warning'
+            })
+            return false
+          }
           this.sureSubmit()
         } else {
           this.$message({
@@ -133,19 +267,41 @@ export default {
     },
     // 提交信息
     sureSubmit () {
-      this.toggleLoadingBt(true)
+      // this.toggleLoadingBt(true)
       let Data = {
-        code: this.userCode,
-        fname: this.userName,
-        fpeople: this.Form.contacts,
-        fphone: this.Form.phone,
-        fax: this.Form.fax,
-        address: this.Form.address,
-        bank: this.Form.bank,
-        bankaccount: this.Form.bankAccount,
-        emil: this.Form.mail,
-        taxnumber: this.Form.dutyParagraph,
-        institution: this.Form.creditInstitutionNumber
+        jsonPost: {
+          id: this.userId,
+          code: this.userCode,
+          fname: this.userName,
+          fpeople: this.Form.contacts,
+          fphone: this.Form.phone,
+          fphone1: this.Form.fixedPhone,
+          fax: this.Form.fax,
+          address: this.Form.address,
+          bank: this.Form.bank,
+          bankaccount: this.Form.bankAccount,
+          emil: this.Form.mail,
+          emil1: this.Form.mail1,
+          emil2: this.Form.mail2,
+          institution: this.Form.creditInstitutionNumber,
+          gysfiles: [{
+            imagename: this.Form.licenseFileName,
+            image: this.Form.licenseFileUrl,
+            effective_date: this.Form.licenseClosingDate
+          }, {
+            imagename: this.Form.companyFileName,
+            image: this.Form.companyFileUrl,
+            effective_date: ''
+          }, {
+            imagename: this.Form.certificateFileName,
+            image: this.Form.certificateFileUrl,
+            effective_date: this.Form.certificateClosingDate
+          }, {
+            imagename: this.Form.equipmentFileName,
+            image: this.Form.equipmentFileUrl,
+            effective_date: ''
+          }]
+        }
       }
       this.Http.post('updategys', Data
       ).then(res => {
@@ -156,7 +312,7 @@ export default {
               type: 'success'
             })
             // 刷新信息
-            this.getInformaion()
+            // this.getInformaion()
             break
           default:
             this.$message({
@@ -216,8 +372,11 @@ export default {
   flex-direction: column;
   align-items: center;
   .Information{
-    max-width: 388px;
+    /**
+    max-width: 650px;
+    **/
     width: 95%;
+    max-width: 588px;
     margin: 0 auto;
     background: transparent;
     .bt{

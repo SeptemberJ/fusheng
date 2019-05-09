@@ -99,6 +99,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import {clearCookie} from '../../util/utils'
 export default {
   name: 'BasicInfo',
   data () {
@@ -140,14 +141,14 @@ export default {
       this.ifModifyPsd = true
     },
     checkPsd (PSD) {
-      var regu = "^[0-9a-zA-Z]{6,12}$"
-      var re = new RegExp(regu)
+      var regu = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/
+      // var re = new RegExp(regu)
       if (PSD.length < 6) {
         return false
       }
-      if (re.test(PSD)) { 
+      if (regu.test(PSD)) {
         return true
-      }else{ 
+      } else {
         return false
       }
     },
@@ -169,7 +170,7 @@ export default {
               type: 'warning'
             })
           }
-        } else{
+        } else {
           this.$message({
             message: '请将信息填写完整!',
             type: 'warning'

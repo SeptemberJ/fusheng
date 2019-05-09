@@ -49,7 +49,7 @@ export default {
       realCode: '', // 随机验证码
       Form: {
         accountName: 'fushen11', // fushen11
-        accountPsd: 'fs111111', // fs111111
+        accountPsd: '12345678i', // fs111111
         code: ''
       },
       rules: {
@@ -89,6 +89,8 @@ export default {
               message: '输入的验证码不正确!',
               type: 'warning'
             })
+            // 刷新验证码
+            this.createCode()
             return false
           }
         } else {
@@ -105,28 +107,32 @@ export default {
       this.toggleLoadingBt(true)
       this.Http.get('login', {username: this.Form.accountName, pwd: this.Form.accountPsd}
       ).then(res => {
-        switch (res.data.result) {
+        switch (res.data.code) {
           case 1:
             let cookieStr = CryptoJS.HmacSHA256((this.Form.accountName + this.Form.accountPsd).toString(), '14a808c40bba58c2c')
             setCookie('Fs_14a808c40bba58c2c', cookieStr, 6)
-            let Info = res.data.loginlist[0]
+            let Info = res.data.memberInfo
             this.unitUserInfo({code: Info.code, name: Info.fname, id: Info.id})
-            // this.unitCode(Info.code)
-            // this.unitUserName(Info.fname)
             // 强制修改密码 checkstatus 0 未改过密码 1 已修改
             if (Info.checkstatus === '0') {
               this.$router.push({name: 'SetPsd'})
+            } else if (Info.checkstatus === '1') {
+              // 已修改过密码未补充信息
+              this.$router.push({name: 'Information'})
+              // this.$router.push({name: 'Home'})
+            } else {
+              this.$router.push({name: 'Home'})
             }
             // 已修改过密码
-            if (Info.checkstatus === '1') {
-              // 补充信息 ishege 0 补充信息 1 正在审核 2 未通过重新提交 3 已通过
-              if (Info.ishege === '3') {
-                // 审核通过进入主页
-                this.$router.push({name: 'Home'})
-              } else {
-                this.$router.push({name: 'Information'})
-              }
-            }
+            // if (Info.checkstatus === '1') {
+            //   // 补充信息 ishege 0 补充信息 1 正在审核 2 未通过重新提交 3 已通过
+            //   if (Info.ishege === '3') {
+            //     // 审核通过进入主页
+            //     this.$router.push({name: 'Home'})
+            //   } else {
+            //     this.$router.push({name: 'Information'})
+            //   }
+            // }
             this.toggleLoadingBt(false)
             break
           default:
@@ -135,6 +141,8 @@ export default {
               type: 'error'
             })
             this.toggleLoadingBt(false)
+            // 刷新验证码
+            this.createCode()
         }
       }).catch((error) => {
         this.toggleLoadingBt(false)

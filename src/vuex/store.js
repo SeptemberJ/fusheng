@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import vuexAlong from 'vuex-along'
-import { Notification } from 'element-ui'
+import { Notification, Message } from 'element-ui'
 
 Vue.use(Vuex)
 
@@ -33,17 +33,37 @@ const actions = {
   changeModuleIdx ({commit, state}, IDX) {
     commit('setModuleIdx', IDX)
   },
-  showNotice ({commit, state}, overDateStr) {
-    Notification.closeAll()
-    Notification({
-      title: '提示',
-      message: '请及时修改如下证件的有效期： ' + overDateStr,
-      offset: 50,
+  showNotice ({commit, state}, Info) {
+    const h = Info._this.$createElement
+    Message.closeAll()
+    Message({
+      showClose: true,
+      message: h('div', null, [
+        h('p', { style: 'font-weight: bold' }, '请及时修改如下证件的有效期：'),
+        h('div', null, Info.overDateStr + '即将到期，请及时更新!'),
+        h('div', { style: 'color: teal' }, Info.overDateStr + '已到期，请立即更新!')
+      ]),
       type: 'warning',
       duration: 0
     })
+    // Message({
+    //   message: h('p', null, [
+    //     h('span', null, '内容可以是 '),
+    //     h('i', { style: 'color: teal' }, 'VNode')
+    //   ])
+    // })
+
+    // Notification.closeAll()
+    // Notification({
+    //   title: '提示',
+    //   message: '请及时修改如下证件的有效期： ' + overDateStr,
+    //   offset: 50,
+    //   type: 'warning',
+    //   duration: 0
+    // })
   },
   hideNotice  ({commit, state}) {
+    Message.closeAll()
     Notification.closeAll()
   }
 }

@@ -98,7 +98,8 @@ export default {
           overDateStr = overDateStr + item.imagename + '、'
         }
       })
-      this.showNotice(overDateStr.substr(0, overDateStr.length - 1))
+      this.showNotice({_this: this, overDateStr: overDateStr.substr(0, overDateStr.length - 1)})
+      // this.showNotice(overDateStr.substr(0, overDateStr.length - 1), 'pp')
     },
     hideToggleIcon () {
       if (document.body.clientWidth < 768) {
