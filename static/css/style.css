@@ -16,6 +16,10 @@ body{
 .ColorPrimary{
   color: #409EFF;
 }
+/*bg*/
+.bgWhite {
+  background: #FFFFFF;
+}
 /*text-align*/
 .TextAlignL{
   text-align: left;
@@ -27,6 +31,12 @@ body{
   text-align: center;
 }
 /*margin*/
+.MarginT_10{
+  margin-top: 10px;
+}
+.MarginB_10{
+  margin-bottom: 10px;
+}
 .MarginT_20{
   margin-top: 20px;
 }
@@ -39,12 +49,20 @@ body{
 .MarginL_10{
   margin-left: 10px;
 }
+.MarginL_0_N{
+  margin-left: -0px !important;
+}
 /*padding*/
 .PaddingTB_20{
   padding: 20px;
 }
 .CursorPointer{
   cursor: pointer;
+}
+.PartitionLine{
+  width: 100%;height: 10px;
+  border-top: 1px dashed #ccc;
+  margin: 6px auto;
 }
 /*sideBar*/
 .el-submenu.is-active .el-submenu__title, .el-submenu__title{
@@ -130,4 +148,59 @@ body{
 }
 .el-notification__content p{
   width: 250px !important;
+}
+/*from*/
+.searchForm .el-form-item{
+  margin-bottom: 0px !important;
+}
+/**/
+.AddDialog .el-dialog__header{
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: #409EFF !important;
+  padding: 5px 20px;
+  z-index: 9999;
+}
+.AddDialog .el-dialog__headerbtn{
+  position: fixed;
+  top: 10px;
+}
+.AddDialog .el-dialog__title{
+  font-size: 16px;
+  color: #fff;
+}
+.AddDialog .el-dialog__headerbtn .el-dialog__close{
+  color: #fff;
+}
+
+#AddDeliveryForm .el-input.is-disabled .el-input__inner{
+  background-color: #fff !important;
+  color: #000 !important;
+}
+span .el-input.is-disabled .el-input__inner{
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.el-textarea.is-disabled .el-textarea__inner{
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+#chooseCgTable th .el-checkbox{
+  display: none;
+}
+/**/
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item{
+  background:  transparent !important;
+}
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item{
+  font-size: 80px !important;
+  height: 80px !important;
+  line-height: 80px !important;
+  color: red !important;
+  text-align: right !important;
+}
+.full-calendar-header .header-center .prev-month, .full-calendar-header .header-center .next-month{
+  display: none;
 }

@@ -3,7 +3,8 @@
     <div style="width: 100%;"><TopBar/></div>
     <el-row class="Information">
       <el-col :span="24" class="MarginB_20 TextAlignL">
-        <h2 style="display: inline-block">补充信息</h2> <span class="MarginL_10 ColorPrimary">( {{checkTips}} )</span>
+        <h2 style="display: inline-block">补充信息</h2>
+        <!-- <span class="MarginL_10 ColorPrimary">( {{checkTips}} )</span> -->
       </el-col>
       <el-col :span="24">
         <el-form :model="Form" :rules="rules" ref="Form" label-position="left" label-width="95px" class="demo-ruleForm">
@@ -41,13 +42,14 @@
             <el-date-picker style="width: 150px;"
               v-model="Form.licenseClosingDate"
               type="date"
+              value-format="yyyy-MM-dd"
               placeholder="选择有效期">
             </el-date-picker>
             <el-upload
               class="upload-demo"
               :on-success="uploadSuccessLicense"
               :on-remove="removeLicense"
-              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile">
+              :action="urlPre + 'uploadFile'">
               <el-button size="small">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -55,7 +57,7 @@
             <el-input v-model="Form.companyFileName" placeholder="请输入文件名称" clearable></el-input>
             <el-upload
               class="upload-demo TextAlignR"
-              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile"
+              :action="urlPre + 'uploadFile'"
               :on-success="uploadSuccessCompany"
               :on-remove="removeCompany"
               :limit="1">
@@ -67,6 +69,7 @@
             <el-date-picker style="width: 150px;"
               v-model="Form.certificateClosingDate"
               type="date"
+              value-format="yyyy-MM-dd"
               placeholder="选择有效期">
             </el-date-picker>
             <el-upload
@@ -74,7 +77,7 @@
               :limit="1"
               :on-success="uploadSuccessCertificate"
               :on-remove="removeCertificate"
-              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile">
+              :action="urlPre + 'uploadFile'">
               <el-button size="small">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -82,7 +85,7 @@
             <el-input v-model="Form.equipmentFileName" placeholder="请输入文件名称" clearable></el-input>
             <el-upload
               class="upload-demo TextAlignR"
-              action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile"
+              :action="urlPre + 'uploadFile'"
               :on-success="uploadSuccessEquipment"
               :on-remove="removeEquipment"
               :limit="1">
@@ -180,6 +183,7 @@ export default {
   },
   computed: {
     ...mapState({
+      urlPre: state => state.urlPre,
       userCode: state => state.userCode,
       userId: state => state.userId,
       userName: state => state.userName,
@@ -285,18 +289,22 @@ export default {
           emil2: this.Form.mail2,
           institution: this.Form.creditInstitutionNumber,
           gysfiles: [{
+            forder: 1,
             imagename: this.Form.licenseFileName,
             image: this.Form.licenseFileUrl,
             effective_date: this.Form.licenseClosingDate
           }, {
+            forder: 2,
             imagename: this.Form.companyFileName,
             image: this.Form.companyFileUrl,
             effective_date: ''
           }, {
+            forder: 3,
             imagename: this.Form.certificateFileName,
             image: this.Form.certificateFileUrl,
             effective_date: this.Form.certificateClosingDate
           }, {
+            forder: 4,
             imagename: this.Form.equipmentFileName,
             image: this.Form.equipmentFileUrl,
             effective_date: ''
@@ -326,7 +334,7 @@ export default {
     },
     // 获取补充信息
     getInformaion () {
-      this.Http.get('sergys', {code: this.userCode}
+      this.Http.get('sergys', {gysid: this.userId}
       ).then(res => {
         let Info = res.data.arr
         switch (Info.ishege) {

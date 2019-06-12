@@ -13,10 +13,12 @@
           <Breadcrumb/>
           <!-- main content -->
           <OrderList v-if="menuIdx == '1-1'"/>
+          <Purchase v-if="menuIdx == '1-2'"/>
+          <Delivery v-if="menuIdx == '1-3'"/>
           <!-- 个人页 -->
           <BasicInfo v-if="menuIdx == '2-1'"/>
           <Certificates v-if="menuIdx == '2-2'" @refreshOverDate="getOverDateCertificates"/>
-          <Calendar v-if="menuIdx == '2-3'"/>
+          <Calendar v-if="menuIdx == '3'"/>
         </el-main>
         <el-footer>Copyright  2019 上海旺策尔信息科技有限公司 版权所有</el-footer>
       </el-container>
@@ -30,9 +32,11 @@ import TopBar from '../components/TopBar.vue'
 import SideBar from '../components/SideBar.vue'
 import Breadcrumb from '../components/Breadcrumb.vue'
 import OrderList from './Order/OrderList.vue'
+import Purchase from './Order/Purchase.vue'
+import Delivery from './Order/Delivery.vue'
 import BasicInfo from './Center/BasicInfo.vue'
 import Certificates from './Center/Certificates.vue'
-import Calendar from './Center/Calendar.vue'
+import Calendar from './Calendar/Calendar.vue'
 export default {
   name: 'Home',
   data () {
@@ -69,6 +73,8 @@ export default {
     SideBar,
     Breadcrumb,
     OrderList,
+    Purchase,
+    Delivery,
     BasicInfo,
     Certificates,
     Calendar
@@ -93,12 +99,20 @@ export default {
     },
     checkOverDate (List) {
       let overDateStr = ''
+      let wiilOverDateStr = ''
       List.map((item, idx) => {
-        if (item.ftype !== 3) {
-          overDateStr = overDateStr + item.imagename + '、'
+        // 1-过期 2-即将过期 3-正常
+        if (item.ftype === 1) {
+          overDateStr = overDateStr + '"' + item.imagename + '"、'
         }
+        if (item.ftype === 2) {
+          wiilOverDateStr = wiilOverDateStr + '"' + item.imagename + '"、'
+        }
+        // if (item.ftype !== 3) {
+        //   overDateStr = overDateStr + item.imagename + '、'
+        // }
       })
-      this.showNotice({_this: this, overDateStr: overDateStr.substr(0, overDateStr.length - 1)})
+      this.showNotice({_this: this, overDateStr: overDateStr.substr(0, overDateStr.length - 1), wiilOverDateStr: wiilOverDateStr.substr(0, wiilOverDateStr.length - 1)})
       // this.showNotice(overDateStr.substr(0, overDateStr.length - 1), 'pp')
     },
     hideToggleIcon () {

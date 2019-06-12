@@ -49,7 +49,7 @@ export default {
       realCode: '', // 随机验证码
       Form: {
         accountName: 'fushen11', // fushen11
-        accountPsd: '12345678i', // fs111111
+        accountPsd: '123456', // fs111111
         code: ''
       },
       rules: {
@@ -112,7 +112,7 @@ export default {
             let cookieStr = CryptoJS.HmacSHA256((this.Form.accountName + this.Form.accountPsd).toString(), '14a808c40bba58c2c')
             setCookie('Fs_14a808c40bba58c2c', cookieStr, 6)
             let Info = res.data.memberInfo
-            this.unitUserInfo({code: Info.code, name: Info.fname, id: Info.id})
+            this.unitUserInfo({code: Info.code, name: Info.fname, id: Info.id, zdrName: Info.fpeople})
             // 强制修改密码 checkstatus 0 未改过密码 1 已修改
             if (Info.checkstatus === '0') {
               this.$router.push({name: 'SetPsd'})

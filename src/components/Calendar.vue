@@ -119,6 +119,11 @@ export default {
         1}/${dateObj.getDate()}`;
     }
   }
-};
+}
 </script>
+<style>
+  .is-selected {
+    color: #1989FA;
+  }
+</style>
  

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import vuexAlong from 'vuex-along'
+import VuexPersistence from 'vuex-persist'
+// import vuexAlong from 'vuex-along'
 import { Notification, Message } from 'element-ui'
 
 Vue.use(Vuex)
@@ -11,11 +12,17 @@ const state = {
   userName: null,
   userCode: null,
   userId: null,
+  zdrName: null,
   pathName: null,
   btLoading: false,
-  menuIdx: '1-1',
-  moduleIdx: 1
+  menuIdx: '1-2',
+  moduleIdx: 1,
+  // urlPre: 'http://172.16.52.58:8083/',
+  urlPre: 'http://plant.fs-elliott.cn:8082/fushengJK/'
 }
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
 // actions dispatch触发
 const actions = {
   unitUserInfo ({commit, state}, Info) {
@@ -40,27 +47,12 @@ const actions = {
       showClose: true,
       message: h('div', null, [
         h('p', { style: 'font-weight: bold' }, '请及时修改如下证件的有效期：'),
-        h('div', null, Info.overDateStr + '即将到期，请及时更新!'),
-        h('div', { style: 'color: teal' }, Info.overDateStr + '已到期，请立即更新!')
+        h('div', null, Info.wiilOverDateStr === '' ? '' : Info.wiilOverDateStr + '即将到期，请及时更新!'),
+        h('div', null, Info.overDateStr === '' ? '' : Info.overDateStr + Info.overDateStr + '已到期，请立即更新!')
       ]),
       type: 'warning',
       duration: 0
     })
-    // Message({
-    //   message: h('p', null, [
-    //     h('span', null, '内容可以是 '),
-    //     h('i', { style: 'color: teal' }, 'VNode')
-    //   ])
-    // })
-
-    // Notification.closeAll()
-    // Notification({
-    //   title: '提示',
-    //   message: '请及时修改如下证件的有效期： ' + overDateStr,
-    //   offset: 50,
-    //   type: 'warning',
-    //   duration: 0
-    // })
   },
   hideNotice  ({commit, state}) {
     Message.closeAll()
@@ -73,6 +65,7 @@ const mutations = {
     state.userCode = Info.code
     state.userName = Info.name
     state.userId = Info.id
+    state.zdrName = Info.zdrName
   },
   setPath (state, PATH) {
     state.pathName = PATH
@@ -96,6 +89,6 @@ export default new Vuex.Store({
   actions,
   mutations,
   // strict: debug,
-  plugins: [vuexAlong]
+  plugins: [vuexLocal.plugin]
   // plugins: debug ? [createLogger()] : []
 })

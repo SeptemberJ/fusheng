@@ -8,10 +8,22 @@
         <el-date-picker style="width: 100%;"
           v-model="Form.certificateValidity"
           type="date"
+          value-format="yyyy-MM-dd"
           placeholder="选择有效期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="证件资料" prop="certificatePicture">
+      <el-form-item label="证件" prop="file">
+        <el-upload
+          class="upload-demo TextAlignR"
+           action=""
+          :before-upload="beforeUpload"
+          :limit="1">
+          {{originFileName}}
+          <el-button size="small">点击上传</el-button>
+        </el-upload>
+      </el-form-item>
+      <!-- action="http://plant.fs-elliott.cn:8082/fushengJK/uploadFile" -->
+      <!-- <el-form-item label="证件资料" prop="certificatePicture">
         <el-upload
           class="avatar-uploader"
           action=""
@@ -20,7 +32,7 @@
           <img v-if="Form.certificatePicture" :src="Form.certificatePicture" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <!-- <el-button @click="Cancel">取 消</el-button> -->
@@ -32,20 +44,19 @@
 <script>
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
-import { dateToFormat } from '../util/utils'
 export default {
   name: 'AddCertificate',
-  // props: ['dialogFormVisible'],
+  props: ['maxforder'],
   data () {
     return {
       dialogFormVisible: true,
-      formDataImage: '',
       Form: {
         certificateName: '',
         certificateValidity: '',
-        certificatePicture: ''
+        file: ''
+        // fileUrl: ''
       },
-      certificatePictureUrl: '',
+      originFileName: '',
       rules: {
         certificateName: [
           { required: true, message: '请输入证件名称', trigger: 'change' }
@@ -53,7 +64,7 @@ export default {
         certificateValidity: [
           { required: true, message: '请选择证件有效期', trigger: 'change' }
         ],
-        certificatePicture: [
+        file: [
           { required: true, message: '请选择要上传的证件资料', trigger: 'change' }
         ]
       }
@@ -87,51 +98,66 @@ export default {
       })
     },
     sureSubmit () {
+      let curForder = this.maxforder + 1
       this.toggleLoadingBt(true)
-      axios.post(encodeURI('http://plant.fs-elliott.cn:8082/fushengJK/insertphoto?imagename=' + this.Form.certificateName + '&effectivedate=' + dateToFormat(this.Form.certificateValidity) + '&gysid=' + this.userId), this.formDataImage, {
+      this.Http.post('insertphoto?imagename=' + this.Form.certificateName + '&effectivedate=' + this.Form.certificateValidity + '&gysid=' + this.userId + '&forder=' + curForder, this.Form.file, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      ).then(res => {
+        if (res.data === 1) {
+          this.$message({
+            message: '新增成功!',
+            type: 'success'
+          })
+          this.$emit('toggleAddDialog', false)
+          this.$emit('refresh')
+          this.toggleLoadingBt(false)
+        } else {
+          this.$message({
+            message: '新增失败!',
+            type: 'error'
+          })
+          this.toggleLoadingBt(false)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    sureSubmit2 () {
+      let curForder = this.maxforder + 1
+      this.toggleLoadingBt(true)
+      axios.post(encodeURI('http://plant.fs-elliott.cn:8082/fushengJK/insertphoto?imagename=' + this.Form.certificateName + '&effectivedate=' + this.Form.certificateValidity + '&gysid=' + this.userId + '&forder=' + curForder), this.Form.file, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
-        this.$message({
-          message: '新增成功!',
-          type: 'success'
-        })
-        this.$emit('toggleAddDialog', false)
-        this.$emit('refresh')
-        this.toggleLoadingBt(false)
+        if (res.data === 1) {
+          this.$message({
+            message: '新增成功!',
+            type: 'success'
+          })
+          this.$emit('toggleAddDialog', false)
+          this.$emit('refresh')
+          this.toggleLoadingBt(false)
+        } else {
+          this.$message({
+            message: '新增失败!',
+            type: 'error'
+          })
+          this.toggleLoadingBt(false)
+        }
       }).catch((error) => {
         this.toggleLoadingBt(false)
         console.log(error)
       })
     },
     beforeUpload (file) {
-      if (file.size > 1024000 * 2) {
-        this.$message({
-          message: '您上传的图片太大了, 请不要超过2M!',
-          type: 'warning'
-        })
-        return false
-      }
-      let Image = new FormData()
-      Image.append('file', file)
-      this.formDataImage = Image
-      var _this = this
-      var reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        _this.Form.certificatePicture = this.result
-      }
-    },
-    uploadImg (property, img) {
-      // axios.get('http://plant.fs-elliott.cn:8082/fushengJK/uploadBase64?imgStr=' + img, {imgStr: img}, {
-      axios.get('http://plant.fs-elliott.cn:8082/fushengJK/uploadBase64', img, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then((res) => {
-        this[property] = res.data.fileName
-      })
+      this.originFileName = file.name
+      let File = new FormData()
+      File.append('file', file)
+      this.Form.file = File
     }
   }
 }

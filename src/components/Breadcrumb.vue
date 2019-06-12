@@ -57,10 +57,13 @@ export default {
     diffSecondBreadMenu (IDX) {
       switch (IDX) {
         case '1':
-          this.secondBreadMenu = '订单列表'
+          this.secondBreadMenu = '采购管理'
           break
         case '2':
           this.secondBreadMenu = '基本信息'
+          break
+        case '3':
+          this.secondBreadMenu = '日常安排'
           break
       }
     },
@@ -69,11 +72,20 @@ export default {
         case '1-1':
           this.thirdBreadMenu = '订单列表'
           break
+        case '1-2':
+          this.thirdBreadMenu = '采购单'
+          break
+        case '1-3':
+          this.thirdBreadMenu = '送货单'
+          break
         case '2-1':
           this.thirdBreadMenu = '基本信息'
           break
         case '2-2':
           this.thirdBreadMenu = '证件资料'
+          break
+        case '3':
+          this.thirdBreadMenu = ''
           break
       }
     },

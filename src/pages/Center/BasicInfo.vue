@@ -29,21 +29,8 @@
 
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12">
-          <el-form-item label="开户银行" prop="bank">
-            <el-input v-model="basicInfo.bank" placeholder="请输入开户银行" disabled></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12">
-          <el-form-item label="银行账号" prop="bank_account">
-            <el-input v-model="basicInfo.bank_account" placeholder="请输入银行账号" disabled></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="20">
-        <el-col :xs="24" :sm="12">
-          <el-form-item label="税号" prop="taxnumber">
-            <el-input v-model="basicInfo.taxnumber" placeholder="请输入税号" disabled></el-input>
+          <el-form-item label="固定电话" prop="fphone1">
+            <el-input v-model="basicInfo.fphone1" placeholder="请输入固定电话" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12">
@@ -62,6 +49,31 @@
         <el-col :xs="24" :sm="12">
           <el-form-item label="邮箱" prop="emil">
             <el-input v-model="basicInfo.emil" placeholder="请输入邮箱" disabled></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="12">
+          <el-form-item label="备用邮箱1" prop="emil1">
+            <el-input v-model="basicInfo.emil1" placeholder="请输入备用邮箱" disabled></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+          <el-form-item label="备用邮箱2" prop="emil2">
+            <el-input v-model="basicInfo.emil2" placeholder="请输入备用邮箱" disabled></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="12">
+          <el-form-item label="开户银行" prop="bank">
+            <el-input v-model="basicInfo.bank" placeholder="请输入开户银行" disabled></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+          <el-form-item label="银行账号" prop="bank_account">
+            <el-input v-model="basicInfo.bank_account" placeholder="请输入银行账号" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,14 +137,15 @@ export default {
   },
   computed: {
     ...mapState({
-      userCode: state => state.userCode
+      userCode: state => state.userCode,
+      userId: state => state.userId
     })
   },
   methods: {
     getBasicInfo () {
-      this.Http.get('sergys', {code: this.userCode}
+      this.Http.get('sergys', {gysid: this.userId}
       ).then(res => {
-        this.basicInfo = res.data.arr
+        this.basicInfo = res.data.gysinfo
       }).catch((error) => {
         console.log(error)
       })

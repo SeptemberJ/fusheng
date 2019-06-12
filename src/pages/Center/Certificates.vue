@@ -2,7 +2,7 @@
   <div class="Certificates">
     <el-row>
       <el-col :span="24" class="TextAlignR MarginB_20">
-        <el-button type="primary" size="small" icon="el-icon-plus" @click="addCertificate">新增</el-button>
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="addCertificate">新增证书</el-button>
       </el-col>
       <el-col :span="24">
         <el-table
@@ -17,18 +17,19 @@
             label="证件名称">
           </el-table-column>
           <el-table-column
+            prop="ftypeTxt"
+            label="证件状态">
+          </el-table-column>
+          <el-table-column
             prop="effective_date"
             label="有效期">
           </el-table-column>
-          <!-- <el-table-column
-            prop="imagename"
-            label="图片">
-          </el-table-column> -->
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="primary"
+                :disabled="scope.row.check_status == 0"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button
                 size="mini"
@@ -49,9 +50,9 @@
       </el-col>
     </el-row>
     <!-- add -->
-    <AddCertificate v-if="ifAdd" :dialogFormVisible="ifAdd" @toggleAddDialog="toggleAddDialog" @refresh="getCertificateList"/>
+    <AddCertificate v-if="ifAdd" :maxforder="maxforder" :dialogFormVisible="ifAdd" @toggleAddDialog="toggleAddDialog" @refresh="getCertificateList"/>
     <!-- Modify -->
-    <ModifyCertificate v-if="ifModify" :dialogFormVisible="ifModify" :detailInfo="detailInfo" @toggleModifyDialog="toggleModifyDialog" @refresh="getCertificateList"/>
+    <ModifyCertificate v-if="ifModify" :dialogFormVisible="ifModify" :detailInfo="detailInfo" @toggleModifyDialog="toggleModifyDialog" @refresh="getCertificateList" @refreshOverDate="getOverDateCertificates"/>
   </div>
 </template>
 
@@ -67,6 +68,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       sum: 0,
+      maxforder: '',
       CertificateList: [],
       ifAdd: false,
       ifModify: false,
@@ -114,6 +116,7 @@ export default {
               message: '删除成功!'
             })
             this.getCertificateList()
+            this.$emit('refreshOverDate')
             break
           default:
             this.$message({
@@ -134,13 +137,37 @@ export default {
     toggleModifyDialog (STATUS) {
       this.ifModify = STATUS
     },
+    getOverDateCertificates () {
+      this.$emit('refreshOverDate')
+    },
     getCertificateList () {
       this.Http.get('serzjlist', {gysid: this.userId, pageSize: this.pageSize, pageNo: this.currentPage}
       ).then(res => {
         switch (res.data.result) {
           case 1:
-            this.CertificateList = res.data.photolist
+            this.CertificateList = res.data.photolist.map(item => {
+              // 1 已过期  2 即将过期  3 正常  4 暂停更新
+              switch (item.ftype) {
+                case '0':
+                  item.ftypeTxt = ''
+                  break
+                case '1':
+                  item.ftypeTxt = '已过期'
+                  break
+                case '2':
+                  item.ftypeTxt = '即将过期'
+                  break
+                case '3':
+                  item.ftypeTxt = '正常'
+                  break
+                case '4':
+                  item.ftypeTxt = '暂停更新'
+                  break
+              }
+              return item
+            })
             this.sum = res.data.count
+            this.maxforder = res.data.maxforder
             break
           default:
             this.$message({

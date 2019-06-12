@@ -4,6 +4,7 @@ import App from './App'
 import router from './router'
 import store from './vuex/store'
 import ElementUI from 'element-ui'
+// import FullCalendar from 'vue-fullcalendar'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/style.css'
 import '../static/icon/iconfont.css'
@@ -15,6 +16,7 @@ Vue.prototype.Http = Http
 
 Vue.use(Vuex)
 Vue.use(ElementUI)
+// Vue.use(FullCalendar)
 // Vue.use(Print)
 
 Vue.config.productionTip = false
