@@ -38,33 +38,35 @@
         <el-button class="MarginL_0_N" size="mini">导出</el-button> -->
       </el-col>
       <el-col :span="24">
-        <el-table
+        <el-table class="lineSmallTable"
           :data="deliveryList"
           v-loading="loading"
           @selection-change="handleSelectionChange"
           style="width: 100%"
-          height="250">
+          height="580">
           <el-table-column
             type="index"
             fixed
             width="50">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             type="selection"
             fixed
             width="55">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="songhuono"
-            width="120"
+            width="150"
+            show-overflow-tooltip
             label="送货单号">
           </el-table-column>
           <el-table-column
             prop="cgorderno"
-            width="120"
+            width="150"
+            show-overflow-tooltip
             label="采购单号">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="providerfullname"
             width="200"
             show-overflow-tooltip
@@ -80,23 +82,38 @@
             prop="providercode"
             width="120"
             label="供应商编号">
+          </el-table-column> -->
+          <el-table-column
+            prop="matcode"
+            width="150"
+            show-overflow-tooltip
+            label="物料编号">
           </el-table-column>
           <el-table-column
             prop="matcode"
-            width="100"
+            width="150"
+            show-overflow-tooltip
             label="材质">
+          </el-table-column>
+          <el-table-column
+            prop="version"
+            width="100"
+            show-overflow-tooltip
+            label="版本号">
           </el-table-column>
           <el-table-column
             prop="units"
             width="50"
+            show-overflow-tooltip
             label="单位">
           </el-table-column>
           <el-table-column
             prop="providerproxy"
             width="100"
+            show-overflow-tooltip
             label="联系人">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="tel"
             width="150"
             show-overflow-tooltip
@@ -113,10 +130,11 @@
             width="250"
             show-overflow-tooltip
             label="地址">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="name"
             width="100"
+            show-overflow-tooltip
             label="收货联系人">
           </el-table-column>
           <el-table-column
@@ -141,15 +159,6 @@
             prop="name"
             label="录入人">
           </el-table-column> -->
-          <el-table-column
-            prop="matcode"
-            width="120"
-            label="物料编号">
-          </el-table-column>
-          <el-table-column
-            prop="version"
-            label="版本号">
-          </el-table-column>
           <!-- <el-table-column
             prop="name"
             label="图号">
@@ -157,6 +166,7 @@
           <el-table-column
             prop="shnum"
             width="120"
+            show-overflow-tooltip
             label="收货数量">
           </el-table-column>
           <!-- <el-table-column
@@ -220,6 +230,7 @@
       <el-col :span="24" class="TextAlignR MarginT_20">
         <el-pagination
           @current-change="handleCurrentChange"
+          :current-page.sync="curPage"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
           :total="sum">
@@ -227,7 +238,7 @@
       </el-col>
     </el-row>
     <!-- 录入 -->
-    <Add v-if="ifInput" @toggleAddDialog="toggleAddDialog" @refreshDeliveryOrders="getDeliveryList"/>
+    <Add v-if="ifInput" @toggleAddDialog="toggleAddDialog" @refreshDeliveryOrders="search"/>
     <!-- 查看 -->
     <Detail v-if="ifSeeDetail" :curSongHuoId="curSongHuoId" @toggleDetailDialog="toggleDetailDialog"></Detail>
   </div>
@@ -245,7 +256,7 @@ export default {
       ifSeeDetail: false,
       curSongHuoId: '',
       loading: false,
-      pageSize: 10,
+      pageSize: 15,
       curPage: 1,
       sum: 0,
       formSearch: {
@@ -299,7 +310,7 @@ export default {
       this.getDeliveryList(Data)
     },
     handleCurrentChange () {
-
+      this.search()
     },
     handleSelectionChange (val) {
       this.selected = val

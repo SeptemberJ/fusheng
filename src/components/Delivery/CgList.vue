@@ -25,7 +25,6 @@
               </el-date-picker>
             </el-form-item>
           </el-form>
-          {{selectedCgorderno}}
         </el-col>
         <el-col :span="4" class="TextAlignR">
           <el-button type="primary" @click="search" size="mini" style="margin-top: 6px;">查询</el-button>
@@ -86,8 +85,9 @@
             </el-table-column>
             <el-table-column
               prop="stuff"
-              width="120"
-              label="材质">
+              width="150"
+              label="材质"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="shnum"
@@ -134,7 +134,7 @@ export default {
     return {
       listDialogVisible: true,
       loading: false,
-      pageSize: 8,
+      pageSize: 10,
       curPage: 1,
       sum: 0,
       selectedList: [], // 当前页所选择的项

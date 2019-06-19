@@ -2,8 +2,8 @@
   <div class="BreadcrumbBar">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item><span class="CursorPointer BoldBread" @click="ToIndex">首页</span></el-breadcrumb-item>
-      <el-breadcrumb-item><span class="BoldBread">{{secondBreadMenu}}</span></el-breadcrumb-item>
-      <el-breadcrumb-item>{{thirdBreadMenu}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="menuIdx != 0"><span class="BoldBread">{{secondBreadMenu}}</span></el-breadcrumb-item>
+      <el-breadcrumb-item v-if="menuIdx != 0">{{thirdBreadMenu}}</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- <el-row>
       <el-col :span="24">
@@ -56,14 +56,14 @@ export default {
     ]),
     diffSecondBreadMenu (IDX) {
       switch (IDX) {
+        case '0':
+          this.secondBreadMenu = ''
+          break
         case '1':
           this.secondBreadMenu = '采购管理'
           break
         case '2':
-          this.secondBreadMenu = '基本信息'
-          break
-        case '3':
-          this.secondBreadMenu = '日常安排'
+          this.secondBreadMenu = '个人页'
           break
       }
     },
@@ -87,11 +87,15 @@ export default {
         case '3':
           this.thirdBreadMenu = ''
           break
+        default:
+          this.thirdBreadMenu = ''
       }
     },
     ToIndex () {
-      this.changeModuleIdx('1')
-      this.changeMenuIdx('1-1')
+      this.changeModuleIdx('0')
+      this.changeMenuIdx('0')
+      // this.changeModuleIdx('1')
+      // this.changeMenuIdx('1-1')
     }
   }
 }

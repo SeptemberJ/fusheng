@@ -15,8 +15,10 @@ const state = {
   zdrName: null,
   pathName: null,
   btLoading: false,
-  menuIdx: '1-2',
-  moduleIdx: 1,
+  menuIdx: '0',
+  moduleIdx: 0,
+  // menuIdx: '1-2',
+  // moduleIdx: 1,
   // urlPre: 'http://172.16.52.58:8083/',
   urlPre: 'http://plant.fs-elliott.cn:8082/fushengJK/'
 }

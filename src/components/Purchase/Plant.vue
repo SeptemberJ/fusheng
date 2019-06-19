@@ -1,6 +1,7 @@
 <template>
   <el-dialog class="AddDialog" title="采购订单计划安排" :visible.sync="dialogFormVisible" @close="close" fullscreen>
     <el-row style="background: #fff;padding: 5px 0;margin-top: 10px;">
+      <h3>采购单号：{{curCgorderNo}}</h3>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <!-- 备料 -->
         <section>
@@ -140,7 +141,7 @@
           <el-col :span="12" class="TextAlignL">
             <el-form-item label="实际完成时间" prop="shiji_date_fh" size="mini">
               <el-date-picker
-                v-model="form.shiji_date"
+                v-model="form.shiji_date_fh"
                 size="mini"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -154,13 +155,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" class="TextAlignR MarginB_10">
-            <el-button type="danger" size="mini" @click="Upadte('sh')" v-if="isUpdate">保存</el-button>
+            <el-button type="danger" size="mini" @click="Upadte('fh')" v-if="isUpdate">保存</el-button>
           </el-col>
         </section>
       </el-form>
     </el-row>
     <div slot="footer" class="dialog-footer TextAlignC" v-if="!isUpdate">
-      <el-button type="primary" @click="Submit('Form')">提交{{curCgorderId}}</el-button>
+      <el-button type="primary" @click="Submit('Form')">提交</el-button>
       <el-button @click="close">关闭</el-button>
     </div>
   </el-dialog>
@@ -171,7 +172,7 @@ import { mapState, mapActions } from 'vuex'
 import {secondToFormat} from '../../util/utils'
 export default {
   name: 'Plant',
-  props: ['curCgorderId'],
+  props: ['curCgorderEntryId', 'curCgorderNo'],
   data () {
     return {
       dialogFormVisible: true,
@@ -248,7 +249,7 @@ export default {
           {
             paixu: 1,
             gongxu: '备料',
-            cgorderentryid: this.curCgorderId,
+            cgorderentryid: this.curCgorderEntryId,
             yuji_date: this.form.yuji_date_bl,
             shiji_date: this.form.shiji_date_bl,
             fnote: this.form.fnote_bl,
@@ -257,7 +258,7 @@ export default {
           {
             paixu: 2,
             gongxu: '生产',
-            cgorderentryid: this.curCgorderId,
+            cgorderentryid: this.curCgorderEntryId,
             yuji_date: this.form.yuji_date_sc,
             shiji_date: this.form.shiji_date_sc,
             fnote: this.form.fnote_sc,
@@ -266,7 +267,7 @@ export default {
           {
             paixu: 3,
             gongxu: '检验完工',
-            cgorderentryid: this.curCgorderId,
+            cgorderentryid: this.curCgorderEntryId,
             yuji_date: this.form.yuji_date_jy,
             shiji_date: this.form.shiji_date_jy,
             fnote: this.form.fnote_jy,
@@ -275,7 +276,7 @@ export default {
           {
             paixu: 4,
             gongxu: '发货',
-            cgorderentryid: this.curCgorderId,
+            cgorderentryid: this.curCgorderEntryId,
             yuji_date: this.form.yuji_date_fh,
             shiji_date: this.form.shiji_date_fh,
             fnote: this.form.fnote_fh,
@@ -283,11 +284,10 @@ export default {
           }
         ]
       }
-      console.log(JSON.stringify(DATA))
       this.Http.post('insertCgorderentryPlan', JSON.stringify(DATA)
       ).then(res => {
         switch (res.data.code) {
-          case 1:
+          case 0:
             this.$message({
               message: '采购订单计划安排成功!',
               type: 'success'
@@ -344,7 +344,7 @@ export default {
       this.$emit('togglePlantDialog', false)
     },
     getPlantDetail () {
-      this.Http.get('cgorderPlanList', {cgorderentryid: this.curCgorderId}
+      this.Http.get('cgorderPlanList', {cgorderentryid: this.curCgorderEntryId}
       ).then(res => {
         if (res.data.code === 1) {
           let Info = res.data.cgorderPlanlist
@@ -352,23 +352,55 @@ export default {
             this.isUpdate = false
           } else {
             this.isUpdate = true
-            this.form.yuji_date_bl = Info[0].yuji_date ? secondToFormat(Info[0].yuji_date.time) : ''
-            this.form.shiji_date_bl = Info[0].shiji_date ? secondToFormat(Info[0].shiji_date.time) : ''
-            this.form.fnote_bl = Info[0].fnote
-            this.form.id_bl = Info[0].id
-            this.form.yuji_date_sc = Info[1].yuji_date ? secondToFormat(Info[1].yuji_date.time) : ''
-            this.form.shiji_date_sc = Info[1].shiji_date ? secondToFormat(Info[1].shiji_date.time) : ''
-            this.form.fnote_sc = Info[1].fnote
-            this.form.id_sc = Info[1].id
-            this.form.yuji_date_jy = Info[2].yuji_date ? secondToFormat(Info[2].yuji_date.time) : ''
-            this.form.shiji_date_jy = Info[2].shiji_date ? secondToFormat(Info[2].shiji_date.time) : ''
-            this.form.fnote_jy = Info[2].fnote
-            this.form.fileUrl_jy = Info[2].files
-            this.form.id_jy = Info[2].id
-            this.form.yuji_date_fh = Info[3].yuji_date ? secondToFormat(Info[3].yuji_date.time) : ''
-            this.form.shiji_date_fh = Info[3].shiji_date ? secondToFormat(Info[3].shiji_date.time) : ''
-            this.form.fnote_fh = Info[3].fnote
-            this.form.id_fh = Info[3].id
+            Info.map(item => {
+              switch (item.paixu) {
+                case 1:
+                  this.form.yuji_date_bl = item.yuji_date ? secondToFormat(item.yuji_date.time) : ''
+                  this.form.shiji_date_bl = item.shiji_date ? secondToFormat(item.shiji_date.time) : ''
+                  this.form.fnote_bl = item.fnote
+                  this.form.id_bl = item.id
+                  break
+                case 2:
+                  this.form.yuji_date_sc = item.yuji_date ? secondToFormat(item.yuji_date.time) : ''
+                  this.form.shiji_date_sc = item.shiji_date ? secondToFormat(item.shiji_date.time) : ''
+                  this.form.fnote_sc = item.fnote
+                  this.form.id_sc = item.id
+                  break
+                case 3:
+                  this.form.yuji_date_jy = item.yuji_date ? secondToFormat(item.yuji_date.time) : ''
+                  this.form.shiji_date_jy = item.shiji_date ? secondToFormat(item.shiji_date.time) : ''
+                  this.form.fnote_jy = item.fnote
+                  this.form.fileUrl_jy = item.files
+                  this.form.id_jy = item.id
+                  break
+                case 4:
+                  this.form.yuji_date_fh = item.yuji_date ? secondToFormat(item.yuji_date.time) : ''
+                  this.form.shiji_date_fh = item.shiji_date ? secondToFormat(item.shiji_date.time) : ''
+                  this.form.fnote_fh = item.fnote
+                  this.form.id_fh = item.id
+                  break
+              }
+            })
+            // this.form.yuji_date_bl = Info[0].yuji_date ? secondToFormat(Info[0].yuji_date.time) : ''
+            // this.form.shiji_date_bl = Info[0].shiji_date ? secondToFormat(Info[0].shiji_date.time) : ''
+            // this.form.fnote_bl = Info[0].fnote
+            // this.form.id_bl = Info[0].id
+
+            // this.form.yuji_date_sc = Info[1].yuji_date ? secondToFormat(Info[1].yuji_date.time) : ''
+            // this.form.shiji_date_sc = Info[1].shiji_date ? secondToFormat(Info[1].shiji_date.time) : ''
+            // this.form.fnote_sc = Info[1].fnote
+            // this.form.id_sc = Info[1].id
+
+            // this.form.yuji_date_jy = Info[2].yuji_date ? secondToFormat(Info[2].yuji_date.time) : ''
+            // this.form.shiji_date_jy = Info[2].shiji_date ? secondToFormat(Info[2].shiji_date.time) : ''
+            // this.form.fnote_jy = Info[2].fnote
+            // this.form.fileUrl_jy = Info[2].files
+            // this.form.id_jy = Info[2].id
+
+            // this.form.yuji_date_fh = Info[3].yuji_date ? secondToFormat(Info[3].yuji_date.time) : ''
+            // this.form.shiji_date_fh = Info[3].shiji_date ? secondToFormat(Info[3].shiji_date.time) : ''
+            // this.form.fnote_fh = Info[3].fnote
+            // this.form.id_fh = Info[3].id
           }
         } else {
           this.$message({

@@ -65,6 +65,9 @@ body{
   margin: 6px auto;
 }
 /*sideBar*/
+#logoMenu.is-active {
+  background: rgb(0, 21, 41) !important;
+}
 .el-submenu.is-active .el-submenu__title, .el-submenu__title{
   text-align: left;
 }
@@ -190,17 +193,40 @@ span .el-input.is-disabled .el-input__inner{
 #chooseCgTable th .el-checkbox{
   display: none;
 }
+/*table*/
+.lineSmallTable td{
+  padding: 0 0;
+}
+.fc-view-container th{
+  padding-bottom: 10px;
+}
 /**/
 .full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item{
   background:  transparent !important;
 }
-.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item{
-  font-size: 80px !important;
-  height: 80px !important;
-  line-height: 80px !important;
-  color: red !important;
-  text-align: right !important;
-}
 .full-calendar-header .header-center .prev-month, .full-calendar-header .header-center .next-month{
   display: none;
+}
+.fc-view-container table{
+  width: 100% !important;
+}
+.fc-row {
+  border-bottom: 1px solid #eee !important;
+}
+.fc-view-container td{
+  text-align: right;
+  width: 14%;
+}
+.fc-view-container th{
+  text-align: right;
+  width: 14%;
+}
+.fc-title{
+  font-size: 20px;
+  color: red;
+  cursor: pointer;
+  margin-top: -20px;
+  padding-top: 20px;
+  display: inline-block;
+  width: 100%;
 }

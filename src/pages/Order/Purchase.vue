@@ -44,12 +44,12 @@
         <el-button class="MarginL_0_N" size="mini">导出</el-button> -->
       </el-col>
       <el-col :span="24">
-        <el-table
+        <el-table class="lineSmallTable"
           :data="purchaseList"
           v-loading="loading"
           @selection-change="handleSelectionChange"
           style="width: 100%"
-          height="450">
+          height="580">
           <el-table-column
             type="index"
             fixed
@@ -63,11 +63,13 @@
           <el-table-column
             prop="sendemail1"
             width="80"
+            show-overflow-tooltip
             label="发送次数">
           </el-table-column>
           <el-table-column
             prop="sendemail"
             width="80"
+            show-overflow-tooltip
             label="接收次数">
           </el-table-column>
           <!-- <el-table-column
@@ -78,14 +80,16 @@
           <el-table-column
             prop="fstatusTxt"
             width="100"
+            show-overflow-tooltip
             label="订单状态">
           </el-table-column>
           <el-table-column
             prop="cgorderno"
-            width="120"
+            width="150"
+            show-overflow-tooltip
             label="采购单号">
           </el-table-column>
-          <el-table-column
+         <!--  <el-table-column
             prop="providerfullname"
             width="200"
             show-overflow-tooltip
@@ -101,18 +105,32 @@
             prop="providercode"
             width="120"
             label="供应商编号">
+          </el-table-column> -->
+          <el-table-column
+            prop="matcode"
+            width="150"
+            show-overflow-tooltip
+            label="物料编号">
           </el-table-column>
           <el-table-column
             prop="matcode"
             width="120"
+            show-overflow-tooltip
             label="材质">
+          </el-table-column>
+          <el-table-column
+            prop="version"
+            width="100"
+            show-overflow-tooltip
+            label="版本号">
           </el-table-column>
           <el-table-column
             prop="providerproxy"
             width="100"
+            show-overflow-tooltip
             label="联系人">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="tel"
             width="150"
             show-overflow-tooltip
@@ -129,10 +147,11 @@
             width="250"
             show-overflow-tooltip
             label="地址">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="name"
             width="100"
+            show-overflow-tooltip
             label="收货联系人">
           </el-table-column>
           <el-table-column
@@ -157,15 +176,6 @@
             prop="name"
             label="录入人">
           </el-table-column> -->
-          <el-table-column
-            prop="matcode"
-            width="120"
-            label="物料编号">
-          </el-table-column>
-          <el-table-column
-            prop="version"
-            label="版本号">
-          </el-table-column>
           <!-- <el-table-column
             prop="name"
             label="图号">
@@ -173,21 +183,25 @@
           <el-table-column
             prop="units"
             width="50"
+            show-overflow-tooltip
             label="单位">
           </el-table-column>
           <el-table-column
             prop="num"
-            width="120"
+            width="100"
+            show-overflow-tooltip
             label="订购数量">
           </el-table-column>
           <el-table-column
             prop="wshnum"
-            width="120"
+            width="100"
+            show-overflow-tooltip
             label="未收货数量">
           </el-table-column>
           <el-table-column
             prop="shnum"
-            width="120"
+            width="100"
+            show-overflow-tooltip
             label="收货数量">
           </el-table-column>
           <!-- <el-table-column
@@ -262,7 +276,7 @@
     <!-- 操作 -->
     <!-- <Add v-if="ifInput" @toggleAddDialog="toggleAddDialog" @refreshPurchaseOrders="getPurchaseOrders"/> -->
     <!-- 计划 -->
-    <Plant v-if="ifShowPlant" :curCgorderId="curCgorderId" @togglePlantDialog="togglePlantDialog"></Plant>
+    <Plant v-if="ifShowPlant" :curCgorderEntryId="curCgorderEntryId" :curCgorderNo="curCgorderNo" @togglePlantDialog="togglePlantDialog"></Plant>
   </div>
 </template>
 
@@ -276,7 +290,7 @@ export default {
       // ifInput: false,
       ifShowPlant: false,
       loading: false,
-      pageSize: 10,
+      pageSize: 15,
       curPage: 1,
       sum: 0,
       formSearch: {
@@ -381,7 +395,8 @@ export default {
     seeDetail () {
     },
     editPlant (row) {
-      this.curCgorderId = row.id
+      this.curCgorderEntryId = row.entryid
+      this.curCgorderNo = row.cgorderno
       this.ifShowPlant = true
     },
     send (row) {

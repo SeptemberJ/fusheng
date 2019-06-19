@@ -18,7 +18,7 @@
           <!-- 个人页 -->
           <BasicInfo v-if="menuIdx == '2-1'"/>
           <Certificates v-if="menuIdx == '2-2'" @refreshOverDate="getOverDateCertificates"/>
-          <Calendar v-if="menuIdx == '3'"/>
+          <Calendar v-if="menuIdx == '0'"/>
         </el-main>
         <el-footer>Copyright  2019 上海旺策尔信息科技有限公司 版权所有</el-footer>
       </el-container>

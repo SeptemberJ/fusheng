@@ -2,7 +2,7 @@
   <div class="SideBar">
     <!-- #545c64  #001529-->
     <el-menu :default-active="menuIdx" class="el-menu-vertical-demo" @select="changeMenu" background-color="#001529" text-color="hsla(0,0%,100%,.65)" :collapse="isCollapse">
-      <el-menu-item index="0">
+      <el-menu-item index="0" id="logoMenu">
         <!-- 146 32 -->
         <img style="width:30px;height:30px;margin:0 auto;" src="../../static/images/Logo.png">
         <span slot="title" style="padding-left: 10px;font-size:24px;color:#fff;font-weight:bold;">复 盛</span>
@@ -29,10 +29,10 @@
         <el-menu-item index="2-2">证件资料</el-menu-item>
         <!-- <el-menu-item index="2-3">日常安排</el-menu-item> -->
       </el-submenu>
-      <el-menu-item index="3">
+      <!-- <el-menu-item index="3">
         <i class="el-icon-menu"></i>
         <span slot="title">日常安排</span>
-      </el-menu-item>
+      </el-menu-item> -->
     </el-menu>
   </div>
 </template>
@@ -59,11 +59,12 @@ export default {
     changeMenu (index, keyPath) {
       // console.log(index, keyPath)
       this.changeModuleIdx(keyPath[0])
-      if (index === '0') { // 点击Logo显示主界面
-        this.changeMenuIdx('1-1')
-      } else {
-        this.changeMenuIdx(index)
-      }
+      this.changeMenuIdx(index)
+      // if (index === '0') { // 点击Logo显示主界面
+      //   this.changeMenuIdx('1-1')
+      // } else {
+      //   this.changeMenuIdx(index)
+      // }
     }
   }
 }
