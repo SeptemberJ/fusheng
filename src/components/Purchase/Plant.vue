@@ -36,7 +36,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" class="TextAlignR MarginB_10">
-            <el-button type="danger" size="mini" @click="Upadte('bl')" v-if="isUpdate">保存</el-button>
+            <el-button type="danger" size="mini" @click="Update('bl')" v-if="isUpdate">保 存</el-button>
           </el-col>
         </section>
         <!-- 生产 -->
@@ -72,7 +72,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" class="TextAlignR MarginB_10">
-            <el-button type="danger" size="mini" @click="Upadte('sc')" v-if="isUpdate">保存</el-button>
+            <el-button type="danger" size="mini" @click="Update('sc')" v-if="isUpdate">保 存</el-button>
           </el-col>
         </section>
         <!-- 检验完工 -->
@@ -119,7 +119,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" class="TextAlignR MarginB_10">
-            <el-button type="danger" size="mini" @click="Upadte('jy')" v-if="isUpdate">保存</el-button>
+            <el-button type="danger" size="mini" @click="Update('jy')" v-if="isUpdate">保 存</el-button>
           </el-col>
         </section>
         <!-- 发货 -->
@@ -128,7 +128,7 @@
             <el-divider content-position="left"><h4>发货</h4></el-divider>
           </el-col>
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="预计完成时间" prop="yuji_date_fh" size="mini">
+            <el-form-item label="预计发货时间" prop="yuji_date_fh" size="mini">
               <el-date-picker
                 v-model="form.yuji_date_fh"
                 size="mini"
@@ -155,7 +155,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" class="TextAlignR MarginB_10">
-            <el-button type="danger" size="mini" @click="Upadte('fh')" v-if="isUpdate">保存</el-button>
+            <el-button type="danger" size="mini" @click="Update('fh')" v-if="isUpdate">保 存</el-button>
           </el-col>
         </section>
       </el-form>
@@ -172,7 +172,7 @@ import { mapState, mapActions } from 'vuex'
 import {secondToFormat} from '../../util/utils'
 export default {
   name: 'Plant',
-  props: ['curCgorderEntryId', 'curCgorderNo'],
+  props: ['curCgorderJQ', 'curCgorderEntryId', 'curCgorderNo'],
   data () {
     return {
       dialogFormVisible: true,
@@ -304,23 +304,30 @@ export default {
         console.log(error)
       })
     },
-    Upadte (kind) {
-      switch (kind) {
-        case 'bl':
-          this.sureUpadte(this.form.id_bl, this.form.yuji_date_bl ? this.form.yuji_date_bl : '', this.form.shiji_date_bl ? this.form.shiji_date_bl : '', this.form.fnote_bl, '')
-          break
-        case 'sc':
-          this.sureUpadte(this.form.id_sc, this.form.yuji_date_sc ? this.form.yuji_date_sc : '', this.form.shiji_date_sc ? this.form.shiji_date_sc : '', this.form.fnote_sc, '')
-          break
-        case 'jy':
-          this.sureUpadte(this.form.id_jy, this.form.yuji_date_jy ? this.form.yuji_date_jy : '', this.form.shiji_date_jy ? this.form.shiji_date_jy : '', this.form.fnote_jy, this.form.fileUrl_jy)
-          break
-        case 'fh':
-          this.sureUpadte(this.form.id_fh, this.form.yuji_date_fh ? this.form.yuji_date_fh : '', this.form.shiji_date_fh ? this.form.shiji_date_fh : '', this.form.fnote_fh, '')
-          break
-      }
+    Update (kind) {
+      this.$confirm('确认保存当前修改内容?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        switch (kind) {
+          case 'bl':
+            this.sureUpdate(this.form.id_bl, this.form.yuji_date_bl ? this.form.yuji_date_bl : '', this.form.shiji_date_bl ? this.form.shiji_date_bl : '', this.form.fnote_bl, '')
+            break
+          case 'sc':
+            this.sureUpdate(this.form.id_sc, this.form.yuji_date_sc ? this.form.yuji_date_sc : '', this.form.shiji_date_sc ? this.form.shiji_date_sc : '', this.form.fnote_sc, '')
+            break
+          case 'jy':
+            this.sureUpdate(this.form.id_jy, this.form.yuji_date_jy ? this.form.yuji_date_jy : '', this.form.shiji_date_jy ? this.form.shiji_date_jy : '', this.form.fnote_jy, this.form.fileUrl_jy)
+            break
+          case 'fh':
+            this.sureUpdate(this.form.id_fh, this.form.yuji_date_fh ? this.form.yuji_date_fh : '', this.form.shiji_date_fh ? this.form.shiji_date_fh : '', this.form.fnote_fh, '')
+            break
+        }
+      }).catch(() => {
+      })
     },
-    sureUpadte (id, yujiDate, shijiDate, fnote, files) {
+    sureUpdate (id, yujiDate, shijiDate, fnote, files) {
       this.Http.post('updatePlan?id=' + id + '&yuji_date=' + yujiDate + '&shiji_date=' + shijiDate + '&fnote=' + fnote + '&files=' + files
       ).then(res => {
         switch (res.data.code) {

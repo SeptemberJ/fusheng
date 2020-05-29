@@ -9,6 +9,7 @@ Vue.use(Vuex)
 // const debug = process.env.NODE_ENV !== 'production'
 
 const state = {
+  mainContentHeight: null,
   userName: null,
   userCode: null,
   userId: null,
@@ -19,8 +20,9 @@ const state = {
   moduleIdx: 0,
   // menuIdx: '1-2',
   // moduleIdx: 1,
-  // urlPre: 'http://172.16.52.58:8083/',
-  urlPre: 'http://plant.fs-elliott.cn:8082/fushengJK/'
+  urlPre: 'http://111.231.134.126:8082/fushengJK/'
+  // urlPre: 'http://plant.fs-elliott.cn:8082/fushengJK/'
+  // urlPre: 'http://117.131.44.2:8082/fushengJK/'
 }
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage
@@ -59,6 +61,9 @@ const actions = {
   hideNotice  ({commit, state}) {
     Message.closeAll()
     Notification.closeAll()
+  },
+  changeMainContentHeight ({commit, state}, HEIGHT) {
+    commit('setMainContentHeight', HEIGHT)
   }
 }
 
@@ -80,6 +85,9 @@ const mutations = {
   },
   setModuleIdx (state, IDX) {
     state.moduleIdx = IDX
+  },
+  setMainContentHeight (state, HEIGHT) {
+    state.mainContentHeight = HEIGHT
   }
 }
 

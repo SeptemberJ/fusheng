@@ -26,12 +26,12 @@
             <el-divider></el-divider>
           </el-col>
 
-          <el-col :span="12" class="TextAlignL">
+          <!-- <el-col :span="12" class="TextAlignL">
             <el-form-item label="采购单号: " prop="cgorderno" size="mini">
               <el-input v-model="Form.cgorderno" size="mini" disabled></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="12" class="TextAlignL">
+          </el-col> -->
+          <!-- <el-col :span="12" class="TextAlignL">
             <el-form-item label="送货单号: " prop="shorderno" size="mini">
               <el-input v-model="Form.shorderno" size="mini" disabled></el-input>
             </el-form-item>
@@ -39,7 +39,7 @@
 
           <el-col :span="24">
             <el-divider></el-divider>
-          </el-col>
+          </el-col> -->
 
           <el-col :span="12" class="TextAlignL">
             <el-form-item label="送货时间: " prop="shDate" size="mini">
@@ -63,13 +63,13 @@
           </el-col>
 
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="联系人: " prop="contacts" size="mini">
-              <el-input v-model="Form.contacts" size="mini" disabled></el-input>
+            <el-form-item label="收货联系人: " prop="shlxr" size="mini">
+              <el-input v-model="Form.shlxr" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="电话: " prop="tel" size="mini">
-              <el-input v-model="Form.tel" size="mini" disabled></el-input>
+            <el-form-item label="收货人电话: " prop="shtel" size="mini">
+              <el-input v-model="Form.shtel" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
 
@@ -78,13 +78,22 @@
           </el-col>
 
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="传真: " prop="fax" size="mini">
-              <el-input v-model="Form.fax" size="mini" disabled></el-input>
+            <el-form-item label="收货人传真: " prop="shfax" size="mini">
+              <el-input v-model="Form.shfax" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="收货地址 : " prop="address" size="mini">
-              <el-input v-model="Form.address" size="mini" disabled></el-input>
+            <el-form-item label="收货人地址 : " prop="shaddress" size="mini">
+              <el-input v-model="Form.shaddress" size="mini" disabled></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-divider></el-divider>
+          </el-col>
+          <el-col :span="12" class="TextAlignL">
+            <el-form-item label="送货单号: " prop="shorderno" size="mini">
+              <el-input v-model="Form.shorderno" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
 
@@ -116,8 +125,8 @@
           <span>版本号</span>
           <span>单位</span>
           <span>材质</span>
-          <span>收货数量</span>
-          <span>未收货数量</span>
+          <span>已送货数量</span>
+          <span>未送货数量</span>
           <span>送货数量</span>
           <span>备注</span>
         </el-col>
@@ -167,6 +176,10 @@ export default {
         tel: '',
         fax: '',
         address: '',
+        shlxr: '',
+        shfax: '',
+        shtel: '',
+        shaddress: '',
         note: ''
       },
       rules: {
@@ -206,7 +219,7 @@ export default {
         })
       })
       if (temp.length > 0) {
-        this.Form.cgorderno = temp[0].cgorderno
+        // this.Form.cgorderno = temp[0].cgorderno
         this.Form.supplierFullName = temp[0].providerfullname
         this.Form.supplierShortName = temp[0].providername
         this.Form.providercode = temp[0].providercode
@@ -214,6 +227,10 @@ export default {
         this.Form.tel = temp[0].tel
         this.Form.fax = temp[0].fax
         this.Form.address = temp[0].address
+        this.Form.shlxr = temp[0].shlxr
+        this.Form.shfax = temp[0].shfax
+        this.Form.shtel = temp[0].shtel
+        this.Form.shaddress = temp[0].shaddress
       }
       this.addList = temp
     },
@@ -286,8 +303,10 @@ export default {
           let detailTemp = []
           this.addList.map((item, idx) => {
             detailTemp.push({
-              cgorderentryid: item.id,
+              cgorderentryid: item.entryid,
+              cgorderid: item.id,
               matcode: item.matcode,
+              matname: item.matname,
               version: item.version,
               units: item.units,
               stuff: item.stuff,
@@ -297,19 +316,21 @@ export default {
             })
           })
           let DATA = {
-            cgorderno: this.Form.cgorderno,
             songhuodate: this.Form.shDate,
             providerfullname: this.Form.supplierFullName,
             providername: this.Form.supplierShortName,
             providercode: this.Form.providercode,
-            providerproxy: this.Form.providercode,
+            providerproxy: this.Form.contacts,
+            shlxr: this.Form.shlxr,
+            shfax: this.Form.shfax,
+            shtel: this.Form.shtel,
+            shaddress: this.Form.shaddress,
             faddress: this.Form.address,
             fax: this.Form.fax,
             tel: this.Form.tel,
             fnote: this.Form.note,
             orderdetaillist: detailTemp
           }
-          // console.log(JSON.stringify(DATA))
           this.sureSend(JSON.stringify(DATA))
         } else {
           this.$message({

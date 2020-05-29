@@ -1,27 +1,24 @@
 <template>
   <div class="Home">
     <el-container class="">
-      <!-- <el-aside :class="[isCollapse ? 'asideBarS asideBarSlow' : 'asideBarB asideBarFast', '']" style="overflow-x: hidden;min-height: 850px;box-shadow: 2px 0 6px rgba(0,21,41,.35);background: #001529;display: table-cell;vertical-align: top;text-align: center;"> -->
-      <el-aside :class="[isCollapse ? 'asideBarS asideBarSlow' : 'asideBarB asideBarFast', '']" style="overflow-x: hidden;height: 100vh;box-shadow: 2px 0 6px rgba(0,21,41,.35);background: #001529;display: table-cell;vertical-align: top;text-align: center;">
+      <el-aside :class="[isCollapse ? 'asideBarS asideBarSlow' : 'asideBarB asideBarFast', '']" style="overflow-x: hidden;min-height: 850px;box-shadow: 2px 0 6px rgba(0,21,41,.35);background: #001529;display: table-cell;vertical-align: top;text-align: center;">
         <SideBar :isCollapse="isCollapse"/>
       </el-aside>
-      <el-container :class="[isCollapse ? 'containerB' : 'containerS']" style="height: 100vh;display: table-cell;vertical-align: top;text-align: center;">
+      <el-container :class="[isCollapse ? 'containerB' : 'containerS']" style="display: table-cell;vertical-align: top;text-align: center;">
         <el-header>
           <TopBar @toggleAside="toggleAside" :isCollapse="isCollapse" :isMobile="isMobile"/>
         </el-header>
-        <el-main class="MainContent" id="MainContent">
-          <div style="margin-top: 64px;">
-            <!-- Breadcrumb -->
-            <Breadcrumb/>
-            <!-- main content -->
-            <OrderList v-if="menuIdx == '1-1'"/>
-            <Purchase v-if="menuIdx == '1-2'"/>
-            <Delivery v-if="menuIdx == '1-3'"/>
-            <!-- 个人页 -->
-            <BasicInfo v-if="menuIdx == '2-1'"/>
-            <Certificates v-if="menuIdx == '2-2'" @refreshOverDate="getOverDateCertificates"/>
-            <Index v-if="menuIdx == '0'"/>
-          </div>
+        <el-main class="MainContent">
+          <!-- Breadcrumb -->
+          <Breadcrumb/>
+          <!-- main content -->
+          <OrderList v-if="menuIdx == '1-1'"/>
+          <Purchase v-if="menuIdx == '1-2'"/>
+          <Delivery v-if="menuIdx == '1-3'"/>
+          <!-- 个人页 -->
+          <BasicInfo v-if="menuIdx == '2-1'"/>
+          <Certificates v-if="menuIdx == '2-2'" @refreshOverDate="getOverDateCertificates"/>
+          <Index v-if="menuIdx == '0'"/>
         </el-main>
         <!-- <el-footer>Copyright  2019 上海旺策尔信息科技有限公司 版权所有</el-footer> -->
       </el-container>
@@ -70,9 +67,6 @@ export default {
     window.onresize = () => {
       this.hideToggleIcon()
     }
-    setTimeout(() => {
-      this.changeMainContentHeight(document.getElementById('MainContent').offsetHeight)
-    }, 0)
   },
   components: {
     TopBar,
@@ -87,8 +81,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'showNotice',
-      'changeMainContentHeight'
+      'showNotice'
     ]),
     toggleAside (STATUS) {
       this.isCollapse = STATUS
@@ -115,10 +108,12 @@ export default {
         if (item.ftype === 2) {
           wiilOverDateStr = wiilOverDateStr + '"' + item.imagename + '"、'
         }
+        // if (item.ftype !== 3) {
+        //   overDateStr = overDateStr + item.imagename + '、'
+        // }
       })
-      if (overDateStr || wiilOverDateStr) {
-        this.showNotice({_this: this, overDateStr: overDateStr.substr(0, overDateStr.length - 1), wiilOverDateStr: wiilOverDateStr.substr(0, wiilOverDateStr.length - 1)})
-      }
+      this.showNotice({_this: this, overDateStr: overDateStr.substr(0, overDateStr.length - 1), wiilOverDateStr: wiilOverDateStr.substr(0, wiilOverDateStr.length - 1)})
+      // this.showNotice(overDateStr.substr(0, overDateStr.length - 1), 'pp')
     },
     hideToggleIcon () {
       if (document.body.clientWidth < 768) {
@@ -132,25 +127,27 @@ export default {
 <style lang="less" scoped>
 @Height: 850px;
 @footerHeight: 64px;
-@topHeadHeight: 60px;
 @OpenWidth: 200px;
 @CloseWidth: 64px;
 .Home{
   height: 100vh;
   overflow: hidden;
+  /*min-height: @Height;*/
   background: #f0f2f5;
   .HomeWrap{
     display: table-cell;
     vertical-align: top;
+    background: pink;
   }
   .el-header{
     padding: 0 !important;
   }
   .MainContent{
     width: 100%;
-    height: calc(100% - 60px - 24px);
-    overflow-y: scroll;
-    overflow-x: hidden;
+    height: calc(100% - 24px);
+    background: pink;
+    /*min-height: calc(@Height - @footerHeight);*/
+    overflow: hidden;
   }
   .asideBarB{
     width: @OpenWidth !important;

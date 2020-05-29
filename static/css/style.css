@@ -142,6 +142,11 @@ body{
 .el-main{
   padding-top: 0px !important;
 }
+/* .el-textarea.is-disabled .el-textarea__inner{
+  background-color: #F5F7FA !important;
+  border-color: #E4E7ED !important;
+  color: #C0C4CC !important;
+} */
 /*.notification*/
 .el-notification{
   width: 300px !important;
@@ -186,8 +191,9 @@ span .el-input.is-disabled .el-input__inner{
   color: #000 !important;
 }
 .el-textarea.is-disabled .el-textarea__inner{
-  background-color: #fff !important;
-  color: #000 !important;
+  background-color: #F5F7FA !important;
+  border-color: #E4E7ED !important;
+  color: #C0C4CC !important;
 }
 
 #chooseCgTable th .el-checkbox{

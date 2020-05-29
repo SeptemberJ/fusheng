@@ -1,10 +1,9 @@
 <template>
-  <div class="Index">
+  <div>
     <section class="Calendar">
       <el-card shadow="always">
         <div slot="header" class="clearfix TextAlignL">
-          <span><i class="el-icon-date"></i>日程安排</span>
-          <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
+          <span><i class="el-icon-date" style="margin-right: 5px;"></i>日程安排</span>
         </div>
         <full-calendar class="test-fc"
           :events="monthData"
@@ -12,28 +11,30 @@
         </full-calendar>
       </el-card>
       <el-dialog class="AddDialog" title="日程详情" :visible.sync="calendarDialogVisible" fullscreen @close="close">
-        <el-table
+        <el-table class="lineSmallTable"
           :data="datePlanList"
           height="450"
           style="width: 100%;padding: 5px 0;margin-top: 10px;">
           <el-table-column
             type="index"
-            width="50">
+            width="45">
           </el-table-column>
           <el-table-column
             prop="cgorderno"
             label="采购单号"
-            width="120">
+            width="130"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="gongxu"
             label="工序"
-            width="120">
+            width="100">
           </el-table-column>
           <el-table-column
             prop="matcode"
             label="物料编号"
-            width="120">
+            width="120"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="norms"
@@ -50,30 +51,43 @@
           <el-table-column
             prop="num"
             label="订购数量"
-            width="120">
+            width="80"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="shnum"
             label="收货数量"
-            width="120">
+            width="80"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="wshnum"
             label="未收货数量"
-            width="120">
+            width="90"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="fnote"
             label="备注"
-            width="200"
             show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="80">
+            <template slot-scope="scope">
+              <el-button @click="seeDetail(scope.row)" type="text" size="small">详情</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-dialog>
     </section>
+    <!-- 计划 -->
+    <Plant v-if="ifShowPlant" :curCgorderEntryId="curCgorderEntryId" :curCgorderNo="curCgorderNo" @togglePlantDialog="togglePlantDialog"></Plant>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+import Plant from '../../components/Purchase/Plant'
 export default {
   name: 'Index',
   data () {
@@ -93,6 +107,7 @@ export default {
       calendarDialogVisible: false,
       monthData: [],
       datePlanList: [],
+      ifShowPlant: false,
       config: {
         firstDay: '0',
         weekends: true,
@@ -109,11 +124,8 @@ export default {
         },
         navLinks: true,
         navLinkDayClick: function (date, jsEvent) {
-          // console.log('day', date.format())
-          // console.log('coords', jsEvent.pageX, jsEvent.pageY)
         },
         eventClick: (calEvent, jsEvent, view) => {
-          // console.log(calEvent.start._i)
           this.calendarDialogVisible = true
           this.searchEventList(calEvent.start._i)
         }
@@ -121,17 +133,19 @@ export default {
     }
   },
   components: {
-    // 'full-calendar' : require('vue-fullcalendar')
+    Plant
   },
   created () {
     this.getCalendarDta()
   },
   computed: {
+    ...mapState({
+      userCode: state => state.userCode
+    })
   },
   methods: {
-    changeMonth () {},
     getCalendarDta () {
-      this.Http.get('datePlanList'
+      this.Http.get('datePlanList', {code: this.userCode}
       ).then(res => {
         if (res.data.code === 1) {
           res.data.datePlanList.map((item, idx) => {
@@ -178,19 +192,24 @@ export default {
           type: 'error'
         })
       })
+    },
+    seeDetail (row) {
+      this.curCgorderEntryId = '15564960'// row.entryid
+      this.curCgorderNo = 'PO2018120201' // row.cgorderno
+      this.ifShowPlant = true
+    },
+    togglePlantDialog (val) {
+      this.ifShowPlant = val
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-@Padding: 24px;
-.Index{
-  width: calc(100% - 2*@Padding);
-  background: #fff;
-  padding: @Padding;
-  .Calendar{
-    width: 450px;
-  }
+.Calendar{
+  /*width: 450px;*/
+  width: 95%;
+  margin: 0 auto 24px auto;
 }
+
 </style>

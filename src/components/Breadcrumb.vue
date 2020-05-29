@@ -105,6 +105,9 @@ export default {
 .BreadcrumbBar{
   width: 120%;
   height: 40px;
+  position: fixed;
+  top: 60px;
+  z-index: 999;
   line-height: 40px;
   margin-left: -20px;
   margin-bottom: 20px;

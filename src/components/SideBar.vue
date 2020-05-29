@@ -1,12 +1,20 @@
 <template>
   <div class="SideBar">
     <!-- #545c64  #001529-->
-    <el-menu :default-active="menuIdx" class="el-menu-vertical-demo" @select="changeMenu" background-color="#001529" text-color="hsla(0,0%,100%,.65)" :collapse="isCollapse">
+    <el-menu :default-active="menuIdx" class="el-menu-vertical-demo" @select="changeMenu" background-color="#001529" text-color="hsla(0,0%,100%,.65)" :collapse="isCollapse" :unique-opened="true">
       <el-menu-item index="0" id="logoMenu">
         <!-- 146 32 -->
-        <img style="width:30px;height:30px;margin:0 auto;" src="../../static/images/Logo.png">
-        <span slot="title" style="padding-left: 10px;font-size:24px;color:#fff;font-weight:bold;">复 盛</span>
+        <!-- <img style="width:30px;height:30px;margin:0 auto;" src="../../static/images/Logo2.png"> -->
+        <!-- <span slot="title" style="padding-left: 10px;font-size:24px;color:#fff;font-weight:bold;">能 臣</span> -->
       </el-menu-item>
+      <el-submenu index="3">
+        <template slot="title">
+          <i class="el-icon-chat-dot-square"></i>
+          <span slot="title">询价管理</span>
+        </template>
+        <el-menu-item index="3-1">询价单</el-menu-item>
+        <el-menu-item index="3-2">报价单</el-menu-item>
+      </el-submenu>
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-third-dingdan2"></i>
@@ -19,6 +27,13 @@
           <span slot="title">选项4</span>
           <el-menu-item index="1-4-1">选项1</el-menu-item>
         </el-submenu> -->
+      </el-submenu>
+      <el-submenu index="4">
+        <template slot="title">
+          <i class="el-icon-s-shop"></i>
+          <span slot="title">商品目录</span>
+        </template>
+        <el-menu-item index="4-1">商品清单</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
@@ -58,8 +73,8 @@ export default {
     ]),
     changeMenu (index, keyPath) {
       // console.log(index, keyPath)
-      this.changeModuleIdx(keyPath[0])
       this.changeMenuIdx(index)
+      this.changeModuleIdx(keyPath[0])
       // if (index === '0') { // 点击Logo显示主界面
       //   this.changeMenuIdx('1-1')
       // } else {

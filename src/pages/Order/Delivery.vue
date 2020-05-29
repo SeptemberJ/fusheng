@@ -43,7 +43,7 @@
           v-loading="loading"
           @selection-change="handleSelectionChange"
           style="width: 100%"
-          height="580">
+          :height="tableHieght">
           <el-table-column
             type="index"
             fixed
@@ -54,6 +54,11 @@
             fixed
             width="55">
           </el-table-column> -->
+          <el-table-column
+            prop="fstatusTxt"
+            width="80"
+            label="状态">
+          </el-table-column>
           <el-table-column
             prop="songhuono"
             width="150"
@@ -66,23 +71,12 @@
             show-overflow-tooltip
             label="采购单号">
           </el-table-column>
-          <!-- <el-table-column
-            prop="providerfullname"
+          <el-table-column
+            prop="matname"
             width="200"
             show-overflow-tooltip
-            label="供应商全称">
+            label="物料名称">
           </el-table-column>
-          <el-table-column
-            prop="providername"
-            width="120"
-            show-overflow-tooltip
-            label="供应商简称">
-          </el-table-column>
-          <el-table-column
-            prop="providercode"
-            width="120"
-            label="供应商编号">
-          </el-table-column> -->
           <el-table-column
             prop="matcode"
             width="150"
@@ -90,7 +84,19 @@
             label="物料编号">
           </el-table-column>
           <el-table-column
-            prop="matcode"
+            prop="norms"
+            width="150"
+            show-overflow-tooltip
+            label="规格">
+          </el-table-column>
+          <el-table-column
+            prop="lrsjTxt"
+            width="150"
+            show-overflow-tooltip
+            label="制单日期">
+          </el-table-column>
+          <el-table-column
+            prop="stuff"
             width="150"
             show-overflow-tooltip
             label="材质">
@@ -108,31 +114,13 @@
             label="单位">
           </el-table-column>
           <el-table-column
-            prop="providerproxy"
+            prop="shnum"
             width="100"
             show-overflow-tooltip
-            label="联系人">
-          </el-table-column>
-          <!-- <el-table-column
-            prop="tel"
-            width="150"
-            show-overflow-tooltip
-            label="电话">
+            label="送货数量">
           </el-table-column>
           <el-table-column
-            prop="fax"
-            width="150"
-            show-overflow-tooltip
-            label="传真">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            width="250"
-            show-overflow-tooltip
-            label="地址">
-          </el-table-column> -->
-          <el-table-column
-            prop="name"
+            prop="shlxr"
             width="100"
             show-overflow-tooltip
             label="收货联系人">
@@ -155,74 +143,19 @@
             show-overflow-tooltip
             label="收货人地址">
           </el-table-column>
-          <!-- <el-table-column
-            prop="name"
-            label="录入人">
-          </el-table-column> -->
-          <!-- <el-table-column
-            prop="name"
-            label="图号">
-          </el-table-column> -->
           <el-table-column
             prop="shnum"
             width="120"
             show-overflow-tooltip
             label="收货数量">
           </el-table-column>
-          <!-- <el-table-column
-            prop="name"
-            label="检验数量">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="合格数量">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="不合格数量"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="入库数量">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="未入库数量"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="退料数量">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="关闭标志">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="行关闭标志"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="是否手工关闭"
-            width="110">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="变更版本">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="图纸下载">
-          </el-table-column> -->
           <el-table-column
             fixed="right"
             label="操作"
-            width="80">
+            width="100">
             <template slot-scope="scope">
               <el-button @click="seeDetail(scope.row)" type="text" size="small">查看</el-button>
+              <el-button @click="goPrint(scope.row)" type="text" size="small" :disabled="scope.row.fstatus != 1">打印</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -240,7 +173,11 @@
     <!-- 录入 -->
     <Add v-if="ifInput" @toggleAddDialog="toggleAddDialog" @refreshDeliveryOrders="search"/>
     <!-- 查看 -->
-    <Detail v-if="ifSeeDetail" :curSongHuoId="curSongHuoId" @toggleDetailDialog="toggleDetailDialog"></Detail>
+    <Detail v-if="ifSeeDetail" :curSongHuoId="curSongHuoId" @toggleDetailDialog="toggleDetailDialog" :curTimestamp="curTimestampD"></Detail>
+    <!-- 打印 -->
+    <el-dialog title="复盛易利达送货单" :visible.sync="printDialogVisible" :show-close="false" fullscreen @close="closePrintDialog">
+      <PrintSH @closePrintDialog='closePrintDialog' :curSongHuoId="curSongHuoId" :curTimestamp="curTimestampP"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -248,13 +185,19 @@
 import { mapState } from 'vuex'
 import Add from '../../components/Delivery/Add'
 import Detail from '../../components/Delivery/Detail'
+import PrintSH from '../../components/Delivery/Print'
+import {secondToFormat} from '../../util/utils'
 export default {
   name: 'Delivery',
   data () {
     return {
+      ifCanAdd: true,
       ifInput: false,
       ifSeeDetail: false,
+      printDialogVisible: false,
       curSongHuoId: '',
+      curTimestampD: '',
+      curTimestampP: '',
       loading: false,
       pageSize: 15,
       curPage: 1,
@@ -270,15 +213,20 @@ export default {
   },
   computed: {
     ...mapState({
-      userCode: state => state.userCode
-    })
+      userCode: state => state.userCode,
+      mainContentHeight: state => state.mainContentHeight
+    }),
+    tableHieght: function () {
+      return this.mainContentHeight - 280
+    }
   },
   created () {
     this.search()
   },
   components: {
     Add,
-    Detail
+    Detail,
+    PrintSH
   },
   methods: {
     reset () {
@@ -335,7 +283,25 @@ export default {
       this.Http.get('shorderList', Data
       ).then(res => {
         if (res.data.code === 1) {
-          this.deliveryList = res.data.shorderlist
+          this.deliveryList = res.data.shorderlist.map(item => {
+            if (item.fstatus === '0') {
+              this.ifCanAdd = false
+            }
+            item.lrsj = secondToFormat(item.lrsj.time)
+            item.fstatusTxt = item.fstatus === '0' ? '待审核' : (item.fstatus === '1' ? '同意' : '不同意')
+            return item
+          })
+          // let temp = res.data.shorderlist.slice(0)
+          // let preSonghuono = null
+          // temp.map((item, idx) => {
+          //   if (item.songhuono === preSonghuono) {
+          //     item.cgorderno = ''
+          //     item.sendemail1 = ''
+          //     item.sendemail = ''
+          //   } else {
+          //     preSonghuono = item.songhuono
+          //   }
+          // })
           this.sum = res.data.shorderCount
           this.loading = false
         } else {
@@ -356,11 +322,27 @@ export default {
     },
     // 录入
     Input () {
-      this.ifInput = true
+      if (!this.ifCanAdd) {
+        this.$message({
+          message: '目前还有待审核的送货单，无法录入新的送货单!',
+          type: 'warning'
+        })
+      } else {
+        this.ifInput = true
+      }
     },
     seeDetail (row) {
       this.ifSeeDetail = true
       this.curSongHuoId = row.songhuoid
+      this.curTimestampD = new Date().getTime()
+    },
+    goPrint (row) {
+      this.printDialogVisible = true
+      this.curSongHuoId = row.songhuoid
+      this.curTimestampP = new Date().getTime()
+    },
+    closePrintDialog () {
+      this.printDialogVisible = false
     }
   }
 }
@@ -370,6 +352,7 @@ export default {
 @Padding: 24px;
 .Delivery{
   width: calc(100% - 2*@Padding);
+  height: 100%;
   background: #fff;
   padding: @Padding;
 }

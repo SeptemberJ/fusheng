@@ -227,7 +227,7 @@ export default {
     Submit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.Form)
+          // console.log(this.Form)
           // 要上传就必须名称 文件具备
           if (!this.Form.licenseFileName || !this.Form.licenseClosingDate || !this.Form.licenseFileUrl) {
             this.$message({
@@ -319,6 +319,7 @@ export default {
               message: '信息提交成功!',
               type: 'success'
             })
+            this.$router.push({name: 'Login'})
             // 刷新信息
             // this.getInformaion()
             break

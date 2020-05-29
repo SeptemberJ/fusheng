@@ -51,14 +51,20 @@
               width="55">
             </el-table-column>
             <!-- <el-table-column
-              prop="id"
+              prop="entryid"
               width="120"
-              label="id">
+              label="entryid">
             </el-table-column> -->
             <el-table-column
               prop="cgorderno"
               width="120"
               label="采购单号">
+            </el-table-column>
+            <el-table-column
+              prop="matname"
+              width="200"
+              show-overflow-tooltip
+              label="物料名称">
             </el-table-column>
             <el-table-column
               prop="matcode"
@@ -134,7 +140,7 @@ export default {
     return {
       listDialogVisible: true,
       loading: false,
-      pageSize: 10,
+      pageSize: 20,
       curPage: 1,
       sum: 0,
       selectedList: [], // 当前页所选择的项
@@ -171,13 +177,15 @@ export default {
       this.selectedList = temp
       if (this.selectedList.length > 0) {
         this.selectedList.map((item, idx) => {
-          this.checkIfHas(PurchaseList, item.id)
+          this.checkIfHas(PurchaseList, item.entryid)
+          // this.checkIfHas(PurchaseList, item.id)
         })
       }
     },
-    checkIfHas (PurchaseList, rowId) {
+    checkIfHas (PurchaseList, EntryId) {
       PurchaseList.map((item, idx) => {
-        if (item.id === rowId) {
+        // if (item.id === rowId)
+        if (item.entryid === EntryId) {
           this.$refs.selectedList.toggleRowSelection(PurchaseList[idx], true)
         } else {
         }
@@ -185,44 +193,41 @@ export default {
     },
     handleSelectionChange (curSelection) {
       this.updateSelectedAll(curSelection)
-      let len = curSelection.length
-      let LatestCgorder = curSelection[len - 1] // 最新加入的采购单
-      if (len > 0) {
-        if (this.selectedCgorderno) {
-          // debugger
-          if (LatestCgorder.cgorderno !== this.selectedCgorderno) {
-            this.purchaseList.map((item, idx) => {
-              if (item.id === LatestCgorder.id) {
-                this.$refs.selectedList.toggleRowSelection(this.purchaseList[idx], false)
-              }
-            })
-            this.$message({
-              message: '请选择同样单号的采购单!',
-              type: 'warning'
-            })
-            return false
-          } else {
-            // debugger
-          }
-        } else {
-          // debugger
-          this.selectedCgorderno = curSelection[0].cgorderno
-          if (LatestCgorder.cgorderno !== this.selectedCgorderno) {
-            this.purchaseList.map((item, idx) => {
-              if (item.id === LatestCgorder.id) {
-                this.$refs.selectedList.toggleRowSelection(this.purchaseList[idx], false)
-              }
-            })
-            this.$message({
-              message: '请选择同样单号的采购单!',
-              type: 'warning'
-            })
-            return false
-          } else {
-            // debugger
-          }
-        }
-      }
+      // 不能选择不同单号
+      // let len = curSelection.length
+      // let LatestCgorder = curSelection[len - 1] // 最新加入的采购单
+      // if (len > 0) {
+      //   if (this.selectedCgorderno) {
+      //     if (LatestCgorder.cgorderno !== this.selectedCgorderno) {
+      //       this.purchaseList.map((item, idx) => {
+      //         if (item.entryid === LatestCgorder.entryid) {
+      //           this.$refs.selectedList.toggleRowSelection(this.purchaseList[idx], false)
+      //         }
+      //       })
+      //       this.$message({
+      //         message: '请选择同样单号的采购单!',
+      //         type: 'warning'
+      //       })
+      //       return false
+      //     } else {
+      //     }
+      //   } else {
+      //     this.selectedCgorderno = curSelection[0].cgorderno
+      //     if (LatestCgorder.cgorderno !== this.selectedCgorderno) {
+      //       this.purchaseList.map((item, idx) => {
+      //         if (item.entryid === LatestCgorder.entryid) {
+      //           this.$refs.selectedList.toggleRowSelection(this.purchaseList[idx], false)
+      //         }
+      //       })
+      //       this.$message({
+      //         message: '请选择同样单号的采购单!',
+      //         type: 'warning'
+      //       })
+      //       return false
+      //     } else {
+      //     }
+      //   }
+      // }
       this.selectedList = curSelection
     },
     async updateSelectedAll (curSelection) {
@@ -344,6 +349,7 @@ export default {
       })
     },
     sureChoose () {
+      // console.log(this.selectedAllList)
       this.$emit('updateCgList', this.selectedAllList)
       this.close()
     },

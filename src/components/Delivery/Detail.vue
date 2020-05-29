@@ -4,6 +4,14 @@
       <!-- topInfo -->
       <el-row style="background: #eee;padding: 5px 0;margin-top: 10px;">
         <el-form id="AddDeliveryForm" :model="Form" :rules="rules" ref="Form" label-width="150px" label-position="right">
+          <el-col :span="24" class="TextAlignL">
+            <el-form-item label="送货单号: " prop="shorderno" size="mini">
+              <el-input v-model="Form.shorderno" size="mini" disabled style="width:100%;"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-divider></el-divider>
+          </el-col>
           <el-col :span="12" class="TextAlignL">
             <el-form-item label="制单时间: " prop="zdDate" size="mini">
               <el-date-picker
@@ -22,7 +30,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="24">
+          <!-- <el-col :span="24">
             <el-divider></el-divider>
           </el-col>
 
@@ -35,7 +43,7 @@
             <el-form-item label="送货单号: " prop="shorderno" size="mini">
               <el-input v-model="Form.shorderno" size="mini" disabled></el-input>
             </el-form-item>
-          </el-col>
+          </el-col> -->
 
           <el-col :span="24">
             <el-divider></el-divider>
@@ -48,7 +56,6 @@
                 size="mini"
                 type="date"
                 value-format="yyyy-MM-dd"
-                disabled
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
@@ -64,13 +71,13 @@
           </el-col>
 
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="联系人: " prop="contacts" size="mini">
-              <el-input v-model="Form.contacts" size="mini" disabled></el-input>
+            <el-form-item label="收货联系人: " prop="shlxr" size="mini">
+              <el-input v-model="Form.shlxr" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="电话: " prop="tel" size="mini">
-              <el-input v-model="Form.tel" size="mini" disabled></el-input>
+            <el-form-item label="收货人电话: " prop="shtel" size="mini">
+              <el-input v-model="Form.shtel" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
 
@@ -79,13 +86,13 @@
           </el-col>
 
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="传真: " prop="fax" size="mini">
-              <el-input v-model="Form.fax" size="mini" disabled></el-input>
+            <el-form-item label="收货人传真: " prop="shfax" size="mini">
+              <el-input v-model="Form.shfax" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" class="TextAlignL">
-            <el-form-item label="收货地址 : " prop="address" size="mini">
-              <el-input v-model="Form.address" size="mini" disabled></el-input>
+            <el-form-item label="收货人地址 : " prop="shaddress" size="mini">
+              <el-input v-model="Form.shaddress" size="mini" disabled></el-input>
             </el-form-item>
           </el-col>
 
@@ -95,7 +102,7 @@
 
           <el-col :span="12" class="TextAlignL">
             <el-form-item label="备注: " prop="note" size="mini">
-              <el-input v-model="Form.note" size="mini" type="textarea" :rows="2" disabled></el-input>
+              <el-input v-model="Form.note" size="mini" type="textarea" :rows="2"></el-input>
             </el-form-item>
           </el-col>
 
@@ -104,10 +111,10 @@
       <!-- bottomList -->
       <el-row class="AddListBlock">
         <!-- bt -->
-        <!-- <el-col :span="24" class="TextAlignL MarginT_10">
+        <el-col :span="24" class="TextAlignL MarginT_10">
           <el-button class="MarginL_0_N" size="mini" icon='el-icon-plus' @click="toChoose">选择</el-button>
-          <el-button class="MarginL_0_N" size="mini" icon="el-icon-delete" @click="deleteLine">删除</el-button>
-        </el-col> -->
+          <!-- <el-button class="MarginL_0_N" size="mini" icon="el-icon-delete" @click="deleteLine">删除</el-button> -->
+        </el-col>
         <!-- list -->
         <el-col :span="24" class="ListColumnHead">
           <span>序号</span>
@@ -117,8 +124,8 @@
           <span>版本号</span>
           <span>单位</span>
           <span>材质</span>
-          <!-- <span>收货数量</span>
-          <span>未收货数量</span> -->
+          <span>收货数量</span>
+          <span>未收货数量</span>
           <span>送货数量</span>
           <span>备注</span>
         </el-col>
@@ -130,19 +137,19 @@
           <span><el-input v-model="item.version" size="mini" disabled></el-input></span>
           <span><el-input v-model="item.units" size="mini" disabled></el-input></span>
           <span><el-input v-model="item.stuff" size="mini" disabled></el-input></span>
-          <!-- <span><el-input v-model="item.shnum" size="mini" disabled></el-input></span>
-          <span><el-input v-model="item.wshnum" size="mini" disabled></el-input></span> -->
           <span><el-input v-model="item.shnum" size="mini" disabled></el-input></span>
+          <span><el-input v-model="item.wshnum" size="mini" disabled></el-input></span>
+          <span><el-input size="mini" v-model="inputAmountList[idx]" clearable></el-input></span>
           <span><el-input v-model="item.fnote" size="mini" disabled></el-input></span>
         </el-col>
       </el-row>
-      <!-- <div slot="footer" class="dialog-footer TextAlignC">
-        <el-button type="primary" @click="Submit('Form')">提交</el-button>
+      <div slot="footer" class="dialog-footer TextAlignC">
+        <el-button type="primary" @click="Submit('Form')">保存</el-button>
         <el-button @click="close">关闭</el-button>
-      </div> -->
+      </div>
     </el-dialog>
     <!-- 采购单选择列表 -->
-    <!-- <CgList v-if="ifShowCgList" :copySelectedAllList="copySelectedAllList" @toggleCgListDialog="toggleCgListDialog" @updateCgList="updateCgList"/> -->
+    <CgList v-if="ifShowCgList" :copySelectedAllList="copySelectedAllList" @toggleCgListDialog="toggleCgListDialog" @updateCgList="updateCgList"/>
   </div>
 </template>
 
@@ -152,7 +159,7 @@ import { mapState, mapActions } from 'vuex'
 import {secondToFormat} from '../../util/utils'
 export default {
   name: 'AddPurchase',
-  props: ['curSongHuoId'],
+  props: ['curSongHuoId', 'curTimestamp'],
   data () {
     return {
       addDialogVisible: true,
@@ -160,7 +167,7 @@ export default {
       checked: true,
       Form: {
         zdDate: '',
-        cgorderno: '',
+        // cgorderno: '',
         shorderno: '',
         shDate: '',
         supplierFullName: '',
@@ -170,6 +177,10 @@ export default {
         tel: '',
         fax: '',
         address: '',
+        shlxr: '',
+        shfax: '',
+        shtel: '',
+        shaddress: '',
         note: ''
       },
       rules: {
@@ -195,6 +206,11 @@ export default {
   created () {
     this.getDetail()
   },
+  watch: {
+    curTimestamp: function (val) {
+      this.getDetail()
+    }
+  },
   methods: {
     ...mapActions([
       'toggleLoadingBt'
@@ -209,10 +225,11 @@ export default {
         Outer.map(item => {
           this.inputAmountList.push('')
           temp.push(item)
+          this.addList.push(item)
         })
       })
       if (temp.length > 0) {
-        this.Form.cgorderno = temp[0].cgorderno
+        // this.Form.cgorderno = temp[0].cgorderno
         this.Form.supplierFullName = temp[0].providerfullname
         this.Form.supplierShortName = temp[0].providername
         this.Form.providercode = temp[0].providercode
@@ -220,8 +237,11 @@ export default {
         this.Form.tel = temp[0].tel
         this.Form.fax = temp[0].fax
         this.Form.address = temp[0].address
+        this.Form.shlxr = temp[0].shlxr
+        this.Form.shfax = temp[0].shfax
+        this.Form.shtel = temp[0].shtel
+        this.Form.shaddress = temp[0].shaddress
       }
-      this.addList = temp
     },
     toChoose () {
       this.ifShowCgList = true
@@ -277,30 +297,37 @@ export default {
           let detailTemp = []
           this.addList.map((item, idx) => {
             detailTemp.push({
-              cgorderentryid: item.id,
-              matcode: item.id,
-              version: item.id,
-              units: item.id,
-              stuff: item.id,
+              shid: item.shid ? item.shid : 0,
+              cgorderentryid: item.cgorderentryid ? item.cgorderentryid : item.entryid,
+              cgorderid: item.cgorderid ? item.cgorderid : item.id,
+              matcode: item.matcode,
+              matname: item.matname,
+              version: item.version,
+              units: item.units,
+              stuff: item.stuff,
               shnum: this.inputAmountList[idx],
-              norms: item.id,
-              fnote: item.id
+              norms: item.norms,
+              fnote: item.fnote
             })
           })
           let DATA = {
-            cgorderno: this.Form.cgorderno,
+            id: this.curSongHuoId,
             songhuodate: this.Form.shDate,
             providerfullname: this.Form.supplierFullName,
             providername: this.Form.supplierShortName,
             providercode: this.Form.providercode,
-            providerproxy: this.Form.providercode,
+            providerproxy: this.Form.contacts,
+            shlxr: this.Form.shlxr,
+            shfax: this.Form.shfax,
+            shtel: this.Form.shtel,
+            shaddress: this.Form.shaddress,
             faddress: this.Form.address,
             fax: this.Form.fax,
             tel: this.Form.tel,
             fnote: this.Form.note,
             orderdetaillist: detailTemp
           }
-          // console.log(JSON.stringify(DATA))
+          console.log(DATA)
           this.sureSend(JSON.stringify(DATA))
         } else {
           this.$message({
@@ -311,12 +338,12 @@ export default {
       })
     },
     sureSend (DATA) {
-      this.Http.post('insertSonghuoOrder', DATA
+      this.Http.post('updatetOrder', DATA
       ).then(res => {
         switch (res.data.code) {
           case 0:
             this.$message({
-              message: '送货单录入成功!',
+              message: '送货单编辑成功!',
               type: 'success'
             })
             // 刷新信息
@@ -340,7 +367,7 @@ export default {
           let topInfo = res.data.shorderdetail
           this.Form = {
             zdDate: secondToFormat(topInfo.lrsj.time),
-            cgorderno: topInfo.cgorderno,
+            // cgorderno: topInfo.cgorderno,
             shorderno: topInfo.songhuono,
             shDate: secondToFormat(topInfo.songhuodate.time),
             supplierFullName: topInfo.providerfullname,
@@ -350,11 +377,20 @@ export default {
             tel: topInfo.tel,
             fax: topInfo.fax,
             address: topInfo.faddress,
+            shlxr: topInfo.shlxr,
+            shfax: topInfo.shfax,
+            shtel: topInfo.shtel,
+            shaddress: topInfo.shaddress,
             note: topInfo.fnote
           }
           res.data.shorderentrylist.map(item => {
+            this.inputAmountList.push(item.shnum)
             this.addList.push({
+              shid: item.shid,
+              cgorderentryid: item.cgorderentryid,
+              cgorderid: item.cgorderid,
               matcode: item.matcode,
+              matname: item.matname,
               version: item.version,
               units: item.units,
               stuff: item.stuff,
@@ -395,7 +431,7 @@ export default {
     }
   }
   .AddListBlock{
-    width: 1130px; /*50 + 0 + 200 + 200 + 80 + 80+ 80 + 200 + 0 + 0 + 200 + (5 * 8)*/
+    width: 1375px; /*50 + 30 + 200 + 200 + 80 + 80+ 80 + 200 + 100 + 100 + 200 + (5 * 11)*/
     font-size: 12px;
     .ListColumnHead{
       background: #eee;
@@ -411,6 +447,9 @@ export default {
       span:nth-of-type(1){
         width: 50px;
       }
+      // span:nth-of-type(2){
+      //   width: 30px;
+      // }
       span:nth-of-type(4){
         width: 80px;
       }
@@ -420,11 +459,11 @@ export default {
       span:nth-of-type(6){
         width: 80px;
       }
-      span:nth-of-type(7){
-        width: 200px;
-      }
       span:nth-of-type(8){
-        width: 200px;
+        width: 100px;
+      }
+      span:nth-of-type(9){
+        width: 100px;
       }
     }
     .ListItem{
@@ -439,6 +478,9 @@ export default {
       span:nth-of-type(1){
         width: 50px;
       }
+      // span:nth-of-type(2){
+      //   width: 30px;
+      // }
       span:nth-of-type(4){
         width: 80px;
       }
@@ -448,11 +490,11 @@ export default {
       span:nth-of-type(6){
         width: 80px;
       }
-      span:nth-of-type(7){
-        width: 200px;
-      }
       span:nth-of-type(8){
-        width: 200px;
+        width: 100px;
+      }
+      span:nth-of-type(9){
+        width: 100px;
       }
     }
   }
